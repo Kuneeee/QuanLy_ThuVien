@@ -4,13 +4,13 @@ import java.math.BigDecimal;
 
 import org.junit.jupiter.api.Test;
 
-import entity.HangHoa;
+import entity.TaiLieu;
 
 public class TestProduct {
 
     @Test
     void testHangHoaCreation() {
-        HangHoa hangHoa = new HangHoa();
+        TaiLieu hangHoa = new TaiLieu();
         hangHoa.setHanghoaID("HH001");
         hangHoa.setTenHangHoa("Test Product");
         hangHoa.setSoLuongHangHoa(10);
@@ -24,7 +24,7 @@ public class TestProduct {
 
     @Test
     void testHangHoaWithConstructor() {
-        HangHoa hangHoa = new HangHoa("HH002", "Laptop", 5, 
+        TaiLieu hangHoa = new TaiLieu("HH002", "Laptop", 5, 
                                       java.time.LocalDateTime.now(), 
                                       new BigDecimal("15000000"), 
                                       "Điện tử");
@@ -38,7 +38,7 @@ public class TestProduct {
 
     @Test
     void testHangHoaValidation() {
-        HangHoa hangHoa = new HangHoa();
+        TaiLieu hangHoa = new TaiLieu();
         hangHoa.setHanghoaID("HH003");
         hangHoa.setTenHangHoa("iPhone");
         hangHoa.setSoLuongHangHoa(0);
@@ -52,7 +52,7 @@ public class TestProduct {
 
     @Test
     void testHangHoaToString() {
-        HangHoa hangHoa = new HangHoa("HH004", "Samsung Galaxy", 20, 
+        TaiLieu hangHoa = new TaiLieu("HH004", "Samsung Galaxy", 20, 
                                       java.time.LocalDateTime.now(), 
                                       new BigDecimal("18000000"), 
                                       "Điện tử");
