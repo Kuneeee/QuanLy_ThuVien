@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi Tiết Khách Hàng</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header bg-info text-white">
+                        <h4 class="mb-0">
+                            <i class="fas fa-eye me-2"></i>
+                            READ - Chi Tiết Khách Hàng
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">ID Khách Hàng:</label>
+                                <p class="form-control-plaintext" th:text="${khachHang.khachHangId}">CUS001</p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Tên Khách Hàng:</label>
+                                <p class="form-control-plaintext" th:text="${khachHang.tenKhachHang}">Chị Bảo</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Số Điện Thoại:</label>
+                                <p class="form-control-plaintext" th:text="${khachHang.soDienThoai}">0901234567</p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Email:</label>
+                                <p class="form-control-plaintext" th:text="${khachHang.email ?: 'Chưa cập nhật'}">email@example.com</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Loại Khách Hàng:</label>
+                                <p class="form-control-plaintext" th:text="${khachHang.loaiKhachHang ?: 'Thường'}">VIP</p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Tổng Số Đơn Hàng:</label>
+                                <p class="form-control-plaintext" th:text="${khachHang.soDonHang ?: 0}">25</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Tổng Chi Tiêu:</label>
+                                <p class="form-control-plaintext" th:text="${khachHang.tongChiTieu != null ? (#numbers.formatInteger(khachHang.tongChiTieu.longValue(), 0, 'COMMA') + ' đ') : '0 đ'}">500,000 đ</p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Điểm Thưởng:</label>
+                                <p class="form-control-plaintext" th:text="${khachHang.diemThuong ?: 0}">250</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 mb-3">
+                                <label class="form-label fw-bold">Địa Chỉ:</label>
+                                <p class="form-control-plaintext" th:text="${khachHang.diaChi ?: 'Chưa cập nhật'}">123 Nguyễn Huệ, Quận 1, TP.HCM</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer text-center">
+                        <a href="/customers" class="btn btn-secondary">
+                            <i class="fas fa-list me-2"></i>Danh Sách
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
