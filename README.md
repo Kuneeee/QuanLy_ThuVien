@@ -19,5 +19,5 @@
 ## Cài đặt và chạy
 -Mở project bằng IDE hoặc:
  + B1: ./j21.sh
- + B2: cd quanLyBanHang && mvn clean compile
+ + B2: cd quanLy && mvn clean compile
  + B3: mvn spring-boot:run
