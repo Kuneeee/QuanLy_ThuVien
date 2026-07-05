@@ -1,0 +1,18 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Auto Pull Code",
+			"type": "shell",
+			"command": "git",
+			"args": [
+				"pull",
+				"origin",
+				"main"
+			],
+			"group": "build",
+			"isBackground": false,
+			"problemMatcher": []
+		}
+	]
+}
