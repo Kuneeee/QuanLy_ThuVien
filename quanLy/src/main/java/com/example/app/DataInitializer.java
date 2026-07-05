@@ -1,9 +1,9 @@
 package com.example.app;
 
-import entity.HangHoa;
-import entity.KhachHang;
-import repository.HangHoaRepository;
-import repository.KhachHangRepository;
+import entity.TaiLieu;
+import entity.DocGia;
+import repository.TaiLieuRepository;
+import repository.DocGiaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -17,10 +17,10 @@ import java.time.LocalDateTime;
 public class DataInitializer implements CommandLineRunner {
 
     @Autowired
-    private HangHoaRepository hangHoaRepository;
+    private TaiLieuRepository hangHoaRepository;
 
     @Autowired
-    private KhachHangRepository khachHangRepository;
+    private DocGiaRepository khachHangRepository;
 
     @Override
     @Transactional

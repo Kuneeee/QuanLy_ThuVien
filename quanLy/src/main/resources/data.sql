@@ -1,6 +1,6 @@
 -- PostgreSQL Seed data for Neon Database with correct schema
 
--- Hàng Hóa (Products) - Insert into hang_hoa table
+-- Tài Liệu (Documents) - Insert into hang_hoa table
 INSERT INTO hang_hoa(hanghoa_id, ten_hang_hoa, so_luong_hang_hoa, gia_nhap, loai_hang_hoa, nha_san_xuat, ngay_nhap)
 VALUES
  ('HH001', 'Bánh quy Oreo', 100, 15000, 'Đồ ăn vặt', 'Mondelez', CURRENT_TIMESTAMP),
@@ -11,7 +11,7 @@ VALUES
  ('HH006', 'Chè thái', 20, 15000, 'Đồ uống', 'Chè Bà Ba', CURRENT_TIMESTAMP)
 ON CONFLICT (hanghoa_id) DO NOTHING;
 
--- Khách Hàng (Customers) - Insert into khach_hang table  
+-- Độc Giả (Readers) - Insert into khach_hang table  
 INSERT INTO khach_hang(khach_hang_id, ten_khach_hang, so_dien_thoai, email, dia_chi, loai_khach_hang, tong_da_mua, so_don_hang, tong_chi_tieu, diem_thuong, ngay_tham_gia)
 VALUES
  ('KH001', 'Chị Bảo', '0355696858', 'giabaomc0903@gmail.com', 'Thôn 6 Hải Tiến, xã Hải Ninh, tỉnh Quảng Ninh', 'VIP', 500000, 25, 500000, 50, CURRENT_DATE),

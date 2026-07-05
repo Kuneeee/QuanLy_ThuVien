@@ -1,4 +1,4 @@
--- PostgreSQL Schema for Quan Ly Ban Hang
+-- PostgreSQL Schema for Quan Ly Thu Vien
 -- Compatible with Neon Database
 
 -- Create customers table

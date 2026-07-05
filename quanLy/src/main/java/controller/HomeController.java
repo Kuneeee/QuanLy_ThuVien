@@ -4,25 +4,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import service.BanService;
-import service.CustomerService;
-import service.HangHoaService;
-import service.NhapService;
+import service.DocGiaService;
+import service.MuonTraService;
+import service.NhapTaiLieuService;
+import service.TaiLieuService;
 
 @Controller
 public class HomeController {
 
     @Autowired
-    private HangHoaService hangHoaService;
+    private TaiLieuService hangHoaService;
     
     @Autowired
-    private BanService banService;
+    private MuonTraService banService;
     
     @Autowired
-    private NhapService nhapService;
+    private NhapTaiLieuService nhapService;
     
     @Autowired
-    private CustomerService customerService;
+    private DocGiaService customerService;
 
     @GetMapping("/")
     public String index(Model model) {
@@ -50,5 +50,10 @@ public class HomeController {
         model.addAttribute("tongKhachHang", customerService.getAllCustomers().size());
         
         return "dashboard";
+    }
+
+    @GetMapping("/use-cases")
+    public String useCases() {
+        return "use-cases";
     }
 }

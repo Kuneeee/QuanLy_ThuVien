@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hệ Thống Quản Lý Bán Hàng</title>
+    <title>Hệ Thống Quản Lý Thư Viện</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         .hero-section {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #0f766e 0%, #14532d 100%);
             color: white;
             padding: 60px 0;
         }
@@ -39,15 +39,20 @@
             background: linear-gradient(45deg, #f8f9fa, #e9ecef);
             border-bottom: 3px solid;
         }
-        .hanghoa { border-color: #28a745; }
-        .khachhang { border-color: #007bff; }
-        .nhap { border-color: #ffc107; }
-        .ban { border-color: #dc3545; }
+        .tailieu { border-color: #0f766e; }
+        .docgia { border-color: #2563eb; }
+        .nhap { border-color: #ca8a04; }
+        .muontra { border-color: #dc2626; }
+        .uc-roadmap .badge {
+            border-radius: 999px;
+            padding: 0.65rem 0.9rem;
+            font-weight: 600;
+        }
         
-        .hanghoa .entity-icon { color: #28a745; }
-        .khachhang .entity-icon { color: #007bff; }
-        .nhap .entity-icon { color: #ffc107; }
-        .ban .entity-icon { color: #dc3545; }
+        .tailieu .entity-icon { color: #0f766e; }
+        .docgia .entity-icon { color: #2563eb; }
+        .nhap .entity-icon { color: #ca8a04; }
+        .muontra .entity-icon { color: #dc2626; }
     </style>
 </head>
 <body>
@@ -55,10 +60,10 @@
     <section class="hero-section text-center">
         <div class="container">
             <h1 class="display-4 fw-bold mb-4">
-                <i class="fas fa-cookie-bite me-3"></i>
-                Hệ Thống Quản Lý Bán Đồ Ăn Vặt
+                <i class="fas fa-book-open-reader me-3"></i>
+                Hệ Thống Quản Lý Thư Viện
             </h1>
-            <p class="lead mb-4"></p>
+            <p class="lead mb-0">Bố cục chức năng được chỉnh theo bảng use case trong ve-uc.docx.</p>
         </div>
     </section>
 
@@ -66,121 +71,146 @@
     <div class="container my-5">
         <div class="row mb-5">
             <div class="col-12 text-center">
-                <h2 class="display-6 mb-3">4 Đối Tượng Chính</h2>
-                <p class="text-muted">Mỗi đối tượng đều có đầy đủ chức năng Create - Read - Update - Delete</p>
+                <h2 class="display-6 mb-3">Các phân hệ đang triển khai</h2>
+                <p class="text-muted">Dự án hiện có 4 module chính; các UC còn lại được ghi nhận để phát triển tiếp theo đúng tài liệu.</p>
+                <a href="/use-cases" class="btn btn-outline-dark mt-2">
+                    <i class="fas fa-diagram-project me-1"></i>Xem bảng Use Case đầy đủ
+                </a>
             </div>
         </div>
 
         <div class="row g-4">
-            <!-- Hàng Hóa Card -->
+            <!-- Tài liệu -->
             <div class="col-lg-6 col-md-6">
-                <div class="card entity-card hanghoa h-100">
-                    <div class="card-header text-center hanghoa">
-                        <i class="fas fa-cookie entity-icon"></i>
-                        <h4 class="card-title mb-0">Đồ Ăn Vặt</h4>
-                        <p class="text-muted mb-0">Quản lý sản phẩm đồ ăn vặt và kho hàng</p>
+                <div class="card entity-card tailieu h-100">
+                    <div class="card-header text-center tailieu">
+                        <i class="fas fa-book entity-icon"></i>
+                        <h4 class="card-title mb-0">Tài Liệu Thư Viện</h4>
+                        <p class="text-muted mb-0">Gắn với UC2 và UC4: quản lý, tra cứu tài liệu</p>
                     </div>
                     <div class="card-body text-center">
                         <div class="crud-buttons">
                             <h6 class="text-uppercase fw-bold mb-3"></h6>
-                            <a href="/hanghoa" class="btn btn-outline-success">
+                            <a href="/taiLieu" class="btn btn-outline-success">
                                 <i class="fas fa-list me-1"></i>Xem tất cả
                             </a>
-                            <a href="/hanghoa/new" class="btn btn-success">
+                            <a href="/taiLieu/new" class="btn btn-success">
                                 <i class="fas fa-plus me-1"></i>Thêm mới
                             </a>
                         </div>
                         <div class="mt-4">
                             <small class="text-muted">
                                 <i class="fas fa-info-circle me-1"></i>
-                                Quản lý bánh kẹo, snack, nước uống, giá cả, tồn kho
+                                Có thể xem như kho tài liệu, mã tài liệu, số lượng và thời điểm nhập
                             </small>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Khách Hàng Card -->
+            <!-- Độc giả / tài khoản -->
             <div class="col-lg-6 col-md-6">
-                <div class="card entity-card khachhang h-100">
-                    <div class="card-header text-center khachhang">
-                        <i class="fas fa-users entity-icon"></i>
-                        <h4 class="card-title mb-0">Khách Hàng</h4>
-                        <p class="text-muted mb-0">Quản lý thông tin khách hàng</p>
+                <div class="card entity-card docgia h-100">
+                    <div class="card-header text-center docgia">
+                        <i class="fas fa-user-graduate entity-icon"></i>
+                        <h4 class="card-title mb-0">Người Dùng / Độc Giả</h4>
+                        <p class="text-muted mb-0">Gắn với UC1: tài khoản và người dùng</p>
                     </div>
                     <div class="card-body text-center">
                         <div class="crud-buttons">
                             <h6 class="text-uppercase fw-bold mb-3"></h6>
-                            <a href="/customers" class="btn btn-outline-primary">
+                            <a href="/docGia" class="btn btn-outline-primary">
                                 <i class="fas fa-list me-1"></i>Xem tất cả
                             </a>
-                            <a href="/customers/new" class="btn btn-primary">
+                            <a href="/docGia/new" class="btn btn-primary">
                                 <i class="fas fa-plus me-1"></i>Thêm mới
                             </a>
                         </div>
                         <div class="mt-4">
                             <small class="text-muted">
                                 <i class="fas fa-info-circle me-1"></i>
-                                Quản lý khách hàng mua đồ ăn vặt, thông tin liên hệ
+                                Dùng để mô phỏng người dùng hệ thống, độc giả và thông tin liên hệ
                             </small>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Nhập Hàng Card -->
+            <!-- Nhập tài liệu -->
             <div class="col-lg-6 col-md-6">
                 <div class="card entity-card nhap h-100">
                     <div class="card-header text-center nhap">
-                        <i class="fas fa-truck-loading entity-icon"></i>
-                        <h4 class="card-title mb-0">Nhập Đồ Ăn Vặt</h4>
-                        <p class="text-muted mb-0">Quản lý việc nhập đồ ăn vặt từ nhà cung cấp</p>
+                        <i class="fas fa-truck-ramp-box entity-icon"></i>
+                        <h4 class="card-title mb-0">Nhập Tài Liệu</h4>
+                        <p class="text-muted mb-0">Gắn với UC3: quản lý tài nguyên số / nhập kho</p>
                     </div>
                     <div class="card-body text-center">
                         <div class="crud-buttons">
                             <h6 class="text-uppercase fw-bold mb-3"></h6>
-                            <a href="/nhap" class="btn btn-outline-warning">
+                            <a href="/nhapTaiLieu" class="btn btn-outline-warning">
                                 <i class="fas fa-list me-1"></i>Xem tất cả
                             </a>
-                            <a href="/nhap/new" class="btn btn-warning">
+                            <a href="/nhapTaiLieu/new" class="btn btn-warning">
                                 <i class="fas fa-plus me-1"></i>Thêm mới
                             </a>
                         </div>
                         <div class="mt-4">
                             <small class="text-muted">
                                 <i class="fas fa-info-circle me-1"></i>
-                                Quản lý phiếu nhập bánh kẹo, snack, nhà cung cấp
+                                Quản lý phiếu nhập, nhà cung cấp và thời điểm cập nhật tài liệu
                             </small>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Bán Hàng Card -->
+            <!-- Mượn / trả -->
             <div class="col-lg-6 col-md-6">
-                <div class="card entity-card ban h-100">
-                    <div class="card-header text-center ban">
-                        <i class="fas fa-cash-register entity-icon"></i>
-                        <h4 class="card-title mb-0">Bán Đồ Ăn Vặt</h4>
-                        <p class="text-muted mb-0">Quản lý đơn hàng và doanh thu bán đồ ăn vặt</p>
+                <div class="card entity-card muontra h-100">
+                    <div class="card-header text-center muontra">
+                        <i class="fas fa-book-reader entity-icon"></i>
+                        <h4 class="card-title mb-0">Mượn và Trả Sách</h4>
+                        <p class="text-muted mb-0">Gắn với UC5: luân chuyển tài liệu giữa thư viện và bạn đọc</p>
                     </div>
                     <div class="card-body text-center">
                         <div class="crud-buttons">
                             <h6 class="text-uppercase fw-bold mb-3"></h6>
-                            <a href="/ban" class="btn btn-outline-danger">
+                            <a href="/muonTra" class="btn btn-outline-danger">
                                 <i class="fas fa-list me-1"></i>Xem tất cả
                             </a>
-                            <a href="/ban/new" class="btn btn-danger">
+                            <a href="/muonTra/new" class="btn btn-danger">
                                 <i class="fas fa-plus me-1"></i>Thêm mới
                             </a>
                         </div>
                         <div class="mt-4">
                             <small class="text-muted">
                                 <i class="fas fa-info-circle me-1"></i>
-                                Quản lý đơn hàng bán bánh kẹo, thanh toán, doanh thu
+                                Dùng như phiếu mượn/trả, theo dõi trạng thái tài liệu và người dùng
                             </small>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-5 uc-roadmap">
+            <div class="col-12 text-center mb-3">
+                <h2 class="display-6 mb-2">Bảng Use Case trong tài liệu</h2>
+                <p class="text-muted mb-0">Danh sách dưới đây bám theo đúng thứ tự trong ve-uc.docx.</p>
+            </div>
+            <div class="col-12">
+                <div class="d-flex flex-wrap gap-2 justify-content-center">
+                    <span class="badge text-bg-primary">UC1 - Quản lý tài khoản và người dùng</span>
+                    <span class="badge text-bg-success">UC2 - Quản lý tài liệu thư viện</span>
+                    <span class="badge text-bg-info">UC3 - Quản lý tài nguyên số</span>
+                    <span class="badge text-bg-warning">UC4 - Quản lý tìm kiếm và tra cứu tài liệu</span>
+                    <span class="badge text-bg-danger">UC5 - Quản lý mượn và trả sách</span>
+                    <span class="badge text-bg-secondary">UC6 - Quản lý đặt trước tài liệu</span>
+                    <span class="badge text-bg-dark">UC7 - Quản lý xử phạt vi phạm thư viện</span>
+                    <span class="badge text-bg-success">UC8 - Quản lý phòng đọc và phòng học nhóm</span>
+                    <span class="badge text-bg-info">UC9 - Quản lý thông báo</span>
+                    <span class="badge text-bg-warning">UC10 - Quản lý thống kê và báo cáo</span>
+                    <span class="badge text-bg-primary">UC11 - Quản trị hệ thống</span>
                 </div>
             </div>
         </div>
@@ -191,7 +221,7 @@
         <div class="container">
             <p class="mb-0">
                 <i class="fas fa-copyright me-1"></i>
-                2025 Hệ Thống Quản Lý Bán Đồ Ăn Vặt
+                2025 Hệ Thống Quản Lý Thư Viện
             </p>
         </div>
     </footer>
