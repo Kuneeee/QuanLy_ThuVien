@@ -13,47 +13,34 @@ import service.TaiLieuService;
 public class HomeController {
 
     @Autowired
-    private TaiLieuService hangHoaService;
+    private TaiLieuService taiLieuService;
     
     @Autowired
-    private MuonTraService banService;
+    private MuonTraService muonTraService;
     
     @Autowired
-    private NhapTaiLieuService nhapService;
+    private NhapTaiLieuService nhapTaiLieuService;
     
     @Autowired
-    private DocGiaService customerService;
+    private DocGiaService docGiaService;
 
     @GetMapping("/")
-    public String index(Model model) {
-        // Thống kê cơ bản
-        model.addAttribute("soLuongHangHoa", hangHoaService.getAllHangHoa().size());
-        model.addAttribute("soLuongBan", banService.getAllBan().size());
-        model.addAttribute("soLuongNhap", nhapService.getAllNhap().size());
-        model.addAttribute("soLuongKhachHang", customerService.getAllCustomers().size());
-        
-        return "index";
+    public String index() {
+        return "redirect:/login";
     }
 
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
         // Dashboard với thông tin tổng quan
-        model.addAttribute("tongHangHoa", hangHoaService.getAllHangHoa().size());
-        model.addAttribute("tongGiaTriKho", hangHoaService.tinhTongGiaTriKho());
+        model.addAttribute("tongTaiLieu", taiLieuService.getAllHangHoa().size());
+        model.addAttribute("tongGiaTriTaiLieu", taiLieuService.tinhTongGiaTriKho());
         
-        model.addAttribute("tongPhieuBan", banService.getAllBan().size());
-        model.addAttribute("tongDoanhThu", banService.tinhTongDoanhThu());
+        model.addAttribute("tongPhieuMuonTra", muonTraService.getAllBan().size());
         
-        model.addAttribute("tongPhieuNhap", nhapService.getAllNhap().size());
-        model.addAttribute("tongGiaTriNhap", nhapService.tinhTongGiaTriNhap());
+        model.addAttribute("tongPhieuNhapTaiLieu", nhapTaiLieuService.getAllNhap().size());
         
-        model.addAttribute("tongKhachHang", customerService.getAllCustomers().size());
+        model.addAttribute("tongDocGia", docGiaService.getAllCustomers().size());
         
         return "dashboard";
-    }
-
-    @GetMapping("/use-cases")
-    public String useCases() {
-        return "use-cases";
     }
 }

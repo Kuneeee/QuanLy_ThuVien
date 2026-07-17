@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập - Quản Lý Thư Viện</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="/css/library-ui.css" rel="stylesheet">
+    <style>
+        .login-shell {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 2rem 0;
+        }
+        .login-card {
+            max-width: 1080px;
+            margin: 0 auto;
+            overflow: hidden;
+            border-radius: 28px;
+        }
+        .login-side {
+            background: linear-gradient(135deg, #0f172a 0%, #0f766e 55%, #2563eb 100%);
+            color: white;
+            padding: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .login-side::before,
+        .login-side::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            opacity: .2;
+            background: #fff;
+        }
+        .login-side::before {
+            width: 180px;
+            height: 180px;
+            right: -30px;
+            top: -30px;
+        }
+        .login-side::after {
+            width: 260px;
+            height: 260px;
+            left: -80px;
+            bottom: -120px;
+        }
+        .role-pill {
+            border-radius: 999px;
+            padding: .55rem .9rem;
+            font-weight: 700;
+        }
+        .login-form {
+            padding: 3rem;
+            background: rgba(255,255,255,.96);
+        }
+        .form-control {
+            border-radius: 999px;
+            padding: .85rem 1rem;
+        }
+        .btn-login {
+            border-radius: 999px;
+            padding: .9rem 1.15rem;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+<div class="login-shell">
+    <div class="container">
+        <div class="card login-card lib-card shadow-lg border-0">
+            <div class="row g-0">
+                <div class="col-lg-5 login-side">
+                    <span class="eyebrow"><i class="fas fa-book-open-reader"></i>Quản Lý Thư Viện</span>
+                    <h1 class="display-6 fw-bold mt-3 mb-3">Đăng nhập theo vai trò</h1>
+                    <p class="text-white-50 mb-4">Chọn một trong ba tài khoản mẫu để vào hệ thống với quyền phù hợp.</p>
+                    <div class="d-flex flex-wrap gap-2">
+                        <span class="badge text-bg-light text-dark role-pill">Admin</span>
+                        <span class="badge text-bg-light text-dark role-pill">Giáo viên</span>
+                        <span class="badge text-bg-light text-dark role-pill">Sinh viên</span>
+                    </div>
+                    <div class="mt-5 small text-white-50">
+                        <div><i class="fas fa-user-shield me-2"></i>admin / admin123</div>
+                        <div><i class="fas fa-chalkboard-user me-2"></i>giaovien / giaovien123</div>
+                        <div><i class="fas fa-user-graduate me-2"></i>sinhvien / sinhvien123</div>
+                    </div>
+                </div>
+                <div class="col-lg-7 login-form">
+                    <div class="mb-4">
+                        <h2 class="h3 mb-2">Đăng nhập hệ thống</h2>
+                        <p class="text-muted mb-0">Dùng tài khoản của bạn để vào dashboard và các phân hệ được cấp quyền.</p>
+                    </div>
+
+                    <div th:if="${param.error}" class="alert alert-danger rounded-4">Sai tên đăng nhập hoặc mật khẩu.</div>
+                    <div th:if="${param.logout}" class="alert alert-success rounded-4">Bạn đã đăng xuất thành công.</div>
+
+                    <form th:action="@{/login}" method="post" class="d-grid gap-3">
+                        <div>
+                            <label for="username" class="form-label fw-semibold">Tên đăng nhập</label>
+                            <input type="text" id="username" name="username" class="form-control" placeholder="admin / giaovien / sinhvien" required>
+                        </div>
+                        <div>
+                            <label for="password" class="form-label fw-semibold">Mật khẩu</label>
+                            <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" required>
+                        </div>
+                        <button type="submit" class="btn btn-dark btn-login">Đăng nhập</button>
+                        <a href="/" class="btn btn-outline-secondary btn-login">Về trang chủ</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

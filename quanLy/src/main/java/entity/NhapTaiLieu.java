@@ -11,44 +11,42 @@ import java.time.format.DateTimeFormatter;
  * Tương thích với NhapController và tránh xung đột với HangHoaController, BanController
  */
 @Entity
-@Table(name = "nhap_hang")
+@Table(name = "nhap_tai_lieu")
 public class NhapTaiLieu {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "nhap_id")
     private Long nhapId;
     
-    // Thuộc tính chính - theo NhapController
-    @Column(name = "hanghoa_id", nullable = false, length = 50)
-    private String hanghoaID;        // ID hàng hóa - khớp với NhapController
+    @Column(name = "tai_lieu_id", nullable = false, length = 50)
+    private String hanghoaID;
     
-    @Column(name = "ten_hang_hoa", nullable = false, length = 200)
-    private String tenHangHoa;       // Tên hàng hóa - khớp với NhapController  
+    @Column(name = "ten_tai_lieu", nullable = false, length = 200)
+    private String tenHangHoa;
     
     @Column(name = "so_luong_nhap", nullable = false)
-    private Integer soLuongNhap;        // Số lượng nhập - khớp với NhapController
+    private Integer soLuongNhap;
     
     @Column(name = "gia_nhap", nullable = false, precision = 15, scale = 2)
-    private BigDecimal giaNhap;          // Giá nhập - khớp với NhapController
+    private BigDecimal giaNhap;
     
     @Column(name = "ngay_nhap", nullable = false)
-    private LocalDateTime ngayNhap;         // Ngày nhập - khớp với NhapController
+    private LocalDateTime ngayNhap;
     
-    // Thuộc tính bổ sung cho nhập hàng
     @Column(name = "nha_cung_cap", length = 200)
-    private String nhaCungCap;       // Nhà cung cấp
+    private String nhaCungCap;
     
     @Column(name = "nguoi_nhap", length = 100)
-    private String nguoiNhap;        // Người thực hiện nhập
+    private String nguoiNhap;
     
     @Column(name = "ghi_chu", length = 500)
-    private String ghiChu;           // Ghi chú
+    private String ghiChu;
     
     @Column(name = "trang_thai", length = 50)
-    private String trangThai;        // Trạng thái nhập
+    private String trangThai;
     
-    @Column(name = "ma_nhap_hang", length = 50)
-    private String maNhapHang;       // Mã phiếu nhập (khác với hanghoaID)
+    @Column(name = "ma_phieu_nhap", length = 50)
+    private String maNhapHang;
     
     // Constructor không tham số
     public NhapTaiLieu() {

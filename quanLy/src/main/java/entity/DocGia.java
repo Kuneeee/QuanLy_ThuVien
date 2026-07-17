@@ -6,14 +6,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "khach_hang")
+@Table(name = "doc_gia")
 public class DocGia {
     
     @Id
-    @Column(name = "khach_hang_id", length = 50)
+    @Column(name = "doc_gia_id", length = 50)
     private String khachHangId;
     
-    @Column(name = "ten_khach_hang", nullable = false, length = 200)
+    @Column(name = "ten_doc_gia", nullable = false, length = 200)
     private String tenKhachHang;
     
     @Column(name = "so_dien_thoai", length = 20)
@@ -25,19 +25,19 @@ public class DocGia {
     @Column(name = "dia_chi", columnDefinition = "TEXT")
     private String diaChi;
     
-    @Column(name = "loai_khach_hang", length = 50)
+    @Column(name = "loai_doc_gia", length = 50)
     private String loaiKhachHang;
     
-    @Column(name = "tong_da_mua", precision = 15, scale = 2)
+    @Column(name = "tong_tien_muon", precision = 15, scale = 2)
     private BigDecimal tongDaMua;
     
-    @Column(name = "so_don_hang")
+    @Column(name = "so_lan_muon")
     private Integer soDonHang;
     
-    @Column(name = "tong_chi_tieu", precision = 15, scale = 2)
+    @Column(name = "tong_tien_phat", precision = 15, scale = 2)
     private BigDecimal tongChiTieu;
     
-    @Column(name = "diem_thuong")
+    @Column(name = "diem_tich_luy")
     private Integer diemThuong;
     
     @Column(name = "ngay_tham_gia")

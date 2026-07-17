@@ -8,39 +8,39 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 @Entity
-@Table(name = "ban_hang")
+@Table(name = "muon_tra")
 public class MuonTra {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ban_id")
+    @Column(name = "muon_id")
     private Long banId;
     
-    @Column(name = "ban_code", length = 50)
+    @Column(name = "ma_phieu_muon", length = 50)
     private String banCode;
     
-    @Column(name = "hanghoa_id", nullable = false, length = 50)
+    @Column(name = "tai_lieu_id", nullable = false, length = 50)
     private String hangHoaID;
     
-    @Column(name = "ten_hang_hoa", nullable = false, length = 200)
+    @Column(name = "ten_tai_lieu", nullable = false, length = 200)
     private String tenHangHoa;
     
-    @Column(name = "ten_khach_hang", length = 200)
+    @Column(name = "ten_doc_gia", length = 200)
     private String tenKhachHang;
     
-    @Column(name = "khach_hang", length = 200)
+    @Column(name = "doc_gia", length = 200)
     private String khachHang;
     
-    @Column(name = "ngay_ban", nullable = false)
+    @Column(name = "ngay_muon", nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime ngayBan;
     
     @Column(name = "ghi_chu", length = 500)
     private String ghiChu;
     
-    @Column(name = "gia_ban", nullable = false, precision = 15, scale = 2)
+    @Column(name = "gia_muon", nullable = false, precision = 15, scale = 2)
     private BigDecimal giaBan;
     
-    @Column(name = "so_luong_ban", nullable = false)
+    @Column(name = "so_luong_muon", nullable = false)
     private Integer soLuongBan;
     
     @Column(name = "tong_tien", precision = 15, scale = 2)

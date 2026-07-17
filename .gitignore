@@ -42,6 +42,8 @@ build/
 database-config.properties
 application-prod.properties
 .env
+.env.local
+.env.neon
 *.env
 database-secrets.*
 

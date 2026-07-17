@@ -6,70 +6,67 @@
     <title>Chi Tiết Độc Giả</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="/css/library-ui.css" rel="stylesheet">
 </head>
 <body>
+    <section class="lib-hero">
+        <div class="container position-relative">
+            <span class="eyebrow"><i class="fas fa-eye"></i>Xem hồ sơ</span>
+            <h1 class="display-5 fw-bold mb-3">Chi Tiết Độc Giả</h1>
+            <p class="lead mb-0 text-white-50">Thông tin cá nhân và mức độ hoạt động trong hệ thống thư viện.</p>
+        </div>
+    </section>
+
     <div class="container my-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <div class="card">
-                    <div class="card-header bg-info text-white">
-                        <h4 class="mb-0">
-                            <i class="fas fa-eye me-2"></i>
-                            READ - Chi Tiết Độc Giả
-                        </h4>
+        <div class="lib-detail-panel">
+            <div class="detail-head d-flex flex-wrap align-items-center justify-content-between gap-3">
+                <div>
+                    <h4 class="mb-1"><i class="fas fa-user-graduate me-2"></i><span th:text="${khachHang.tenKhachHang}">Nguyễn Văn An</span></h4>
+                    <p class="mb-0 text-white-50">Mã độc giả <span th:text="${khachHang.khachHangId}">DG001</span></p>
+                </div>
+                <div class="d-flex flex-wrap gap-2">
+                    <a th:href="@{/docGia/{id}/edit(id=${khachHang.khachHangId})}" class="btn btn-light rounded-pill px-3"><i class="fas fa-pen-to-square me-2"></i>Sửa</a>
+                    <a href="/docGia" class="btn btn-outline-light rounded-pill px-3"><i class="fas fa-list me-2"></i>Danh sách</a>
+                </div>
+            </div>
+
+            <div class="detail-body">
+                <div class="lib-meta-grid mb-4">
+                    <div class="lib-meta-card">
+                        <span class="label">Loại độc giả</span>
+                        <div class="value" th:text="${khachHang.loaiKhachHang ?: 'Thường'}">Sinh viên</div>
                     </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">ID Độc Giả:</label>
-                                <p class="form-control-plaintext" th:text="${khachHang.khachHangId}">CUS001</p>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">Tên Độc Giả:</label>
-                                <p class="form-control-plaintext" th:text="${khachHang.tenKhachHang}">Chị Bảo</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">Số Điện Thoại:</label>
-                                <p class="form-control-plaintext" th:text="${khachHang.soDienThoai}">0901234567</p>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">Email:</label>
-                                <p class="form-control-plaintext" th:text="${khachHang.email ?: 'Chưa cập nhật'}">email@example.com</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">Loại Độc Giả:</label>
-                                <p class="form-control-plaintext" th:text="${khachHang.loaiKhachHang ?: 'Thường'}">VIP</p>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">Tổng Số Đơn Hàng:</label>
-                                <p class="form-control-plaintext" th:text="${khachHang.soDonHang ?: 0}">25</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">Tổng Chi Tiêu:</label>
-                                <p class="form-control-plaintext" th:text="${khachHang.tongChiTieu != null ? (#numbers.formatInteger(khachHang.tongChiTieu.longValue(), 0, 'COMMA') + ' đ') : '0 đ'}">500,000 đ</p>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">Điểm Thưởng:</label>
-                                <p class="form-control-plaintext" th:text="${khachHang.diemThuong ?: 0}">250</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12 mb-3">
-                                <label class="form-label fw-bold">Địa Chỉ:</label>
-                                <p class="form-control-plaintext" th:text="${khachHang.diaChi ?: 'Chưa cập nhật'}">123 Nguyễn Huệ, Quận 1, TP.HCM</p>
-                            </div>
+                    <div class="lib-meta-card">
+                        <span class="label">Điểm tích lũy</span>
+                        <div class="value" th:text="${khachHang.diemThuong ?: 0}">24</div>
+                    </div>
+                    <div class="lib-meta-card">
+                        <span class="label">Tổng số lượt mượn</span>
+                        <div class="value" th:text="${khachHang.soDonHang ?: 0}">3</div>
+                    </div>
+                    <div class="lib-meta-card">
+                        <span class="label">Tổng chi tiêu</span>
+                        <div class="value text-success" th:text="${khachHang.tongChiTieu != null ? (#numbers.formatInteger(khachHang.tongChiTieu.longValue(), 0, 'COMMA') + ' đ') : '0 đ'}">240,000 đ</div>
+                    </div>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-lg-6">
+                        <div class="border rounded-4 p-4 h-100 bg-light bg-opacity-50">
+                            <h6 class="fw-bold mb-3"><i class="fas fa-address-card me-2 text-primary"></i>Liên hệ</h6>
+                            <div class="mb-2"><span class="text-muted">Số điện thoại:</span> <strong th:text="${khachHang.soDienThoai}">0901234567</strong></div>
+                            <div class="mb-2"><span class="text-muted">Email:</span> <strong th:text="${khachHang.email ?: 'Chưa cập nhật'}">email@example.com</strong></div>
+                            <div><span class="text-muted">Địa chỉ:</span> <strong th:text="${khachHang.diaChi ?: 'Chưa cập nhật'}">Hà Nội</strong></div>
                         </div>
                     </div>
-                    <div class="card-footer text-center">
-                        <a href="/docGia" class="btn btn-secondary">
-                            <i class="fas fa-list me-2"></i>Danh Sách
-                        </a>
+                    <div class="col-lg-6">
+                        <div class="border rounded-4 p-4 h-100 bg-light bg-opacity-50">
+                            <h6 class="fw-bold mb-3"><i class="fas fa-chart-line me-2 text-success"></i>Hoạt động</h6>
+                            <div class="mb-2"><span class="text-muted">Mã độc giả:</span> <strong th:text="${khachHang.khachHangId}">DG001</strong></div>
+                            <div class="mb-2"><span class="text-muted">Ngày tham gia:</span> <strong th:text="${khachHang.ngayThamGia != null ? #temporals.format(khachHang.ngayThamGia, 'dd/MM/yyyy') : 'Chưa cập nhật'}">01/01/2025</strong></div>
+                            <div class="mb-2"><span class="text-muted">Ngày tạo:</span> <strong th:text="${khachHang.ngayTao != null ? #temporals.format(khachHang.ngayTao, 'dd/MM/yyyy HH:mm') : 'Chưa cập nhật'}">01/01/2025 08:00</strong></div>
+                            <div class="text-muted small">Dữ liệu đang dùng bộ mẫu nạp tự động từ seeder.</div>
+                        </div>
                     </div>
                 </div>
             </div>

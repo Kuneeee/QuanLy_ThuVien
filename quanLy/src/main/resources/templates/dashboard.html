@@ -6,43 +6,11 @@
     <title th:text="${title}">Dashboard thư viện</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        .card-stats {
-            border-left: 4px solid;
-            transition: transform 0.2s;
-        }
-        .card-stats:hover {
-            transform: translateY(-5px);
-        }
-        .card-primary { border-left-color: #007bff; }
-        .card-success { border-left-color: #28a745; }
-        .card-warning { border-left-color: #ffc107; }
-        .card-danger { border-left-color: #dc3545; }
-        .card-info { border-left-color: #17a2b8; }
-        .card-purple { border-left-color: #6f42c1; }
-        
-        .stat-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            color: white;
-        }
-        
-        .bg-primary-gradient { background: linear-gradient(45deg, #007bff, #0056b3); }
-        .bg-success-gradient { background: linear-gradient(45deg, #28a745, #155724); }
-        .bg-warning-gradient { background: linear-gradient(45deg, #ffc107, #e0a800); }
-        .bg-danger-gradient { background: linear-gradient(45deg, #dc3545, #bd2130); }
-        .bg-info-gradient { background: linear-gradient(45deg, #17a2b8, #117a8b); }
-        .bg-purple-gradient { background: linear-gradient(45deg, #6f42c1, #494b8a); }
-    </style>
+    <link href="/css/library-ui.css" rel="stylesheet">
 </head>
 <body>
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <nav class="navbar navbar-expand-lg navbar-dark lib-navbar">
         <div class="container">
             <a class="navbar-brand" href="/">
                 <i class="fas fa-book-open me-2"></i>Quản Lý Thư Viện
@@ -53,210 +21,156 @@
                 <a class="nav-link" href="/taiLieu"><i class="fas fa-book me-1"></i>Tài liệu</a>
                 <a class="nav-link" href="/docGia"><i class="fas fa-users me-1"></i>Độc giả</a>
                 <a class="nav-link" href="/muonTra"><i class="fas fa-right-left me-1"></i>Mượn - trả</a>
+                <a class="nav-link" href="/logout"><i class="fas fa-arrow-right-from-bracket me-1"></i>Đăng xuất</a>
             </div>
         </div>
     </nav>
 
-    <div class="container-fluid mt-4">
-        <div class="row">
-            <div class="col-12">
-                <h2 class="mb-4">
-                    <i class="fas fa-chart-pie me-2"></i>Bảng Điều Khiển
-                    <small class="text-muted">Tổng quan hệ thống thư viện</small>
-                </h2>
-            </div>
+    <section class="lib-hero">
+        <div class="container position-relative">
+            <span class="eyebrow"><i class="fas fa-chart-pie"></i>Bảng điều khiển</span>
+            <h1 class="display-5 fw-bold mb-3">Tổng quan hệ thống thư viện</h1>
+            <p class="lead mb-0 text-white-50">Theo dõi nhanh tài liệu, độc giả, mượn-trả và nhập tài liệu trong một màn hình.</p>
         </div>
+    </section>
 
-        <div class="row mb-4">
-            <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
-                <div class="card card-stats card-primary shadow">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-8">
-                                <h5 class="card-title text-uppercase text-muted mb-0">Tài liệu</h5>
-                                <span class="h2 font-weight-bold mb-0" th:text="${tongHangHoa}">8</span>
-                            </div>
-                            <div class="col-4 text-end">
-                                <div class="stat-icon bg-primary-gradient">
-                                    <i class="fas fa-book"></i>
-                                </div>
-                            </div>
+    <div class="container my-5">
+        <div class="row g-4 mb-4">
+            <div class="col-xl-2 col-md-4 col-sm-6">
+                <div class="lib-stat primary p-4 h-100">
+                    <div class="d-flex justify-content-between align-items-start gap-3">
+                        <div>
+                            <h6 class="text-uppercase lib-muted mb-2">Tài liệu</h6>
+                            <div class="display-6 fw-bold mb-0" th:text="${tongTaiLieu}">8</div>
                         </div>
-                        <p class="mt-3 mb-0 text-muted text-sm">
-                            <span class="text-nowrap">dữ liệu tài liệu đang quản lý</span>
-                        </p>
+                        <div class="stat-icon"><i class="fas fa-book"></i></div>
                     </div>
+                    <p class="lib-muted mb-0 mt-3">Dữ liệu tài liệu đang quản lý</p>
                 </div>
             </div>
 
-            <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
-                <div class="card card-stats card-success shadow">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-8">
-                                <h5 class="card-title text-uppercase text-muted mb-0">Độc giả</h5>
-                                <span class="h2 font-weight-bold mb-0" th:text="${tongKhachHang}">6</span>
-                            </div>
-                            <div class="col-4 text-end">
-                                <div class="stat-icon bg-success-gradient">
-                                    <i class="fas fa-user-graduate"></i>
-                                </div>
-                            </div>
+            <div class="col-xl-2 col-md-4 col-sm-6">
+                <div class="lib-stat info p-4 h-100">
+                    <div class="d-flex justify-content-between align-items-start gap-3">
+                        <div>
+                            <h6 class="text-uppercase lib-muted mb-2">Độc giả</h6>
+                            <div class="display-6 fw-bold mb-0" th:text="${tongDocGia}">6</div>
                         </div>
-                        <p class="mt-3 mb-0 text-muted text-sm">
-                            <span class="text-nowrap">tài khoản/người dùng trong hệ thống</span>
-                        </p>
+                        <div class="stat-icon"><i class="fas fa-user-graduate"></i></div>
                     </div>
+                    <p class="lib-muted mb-0 mt-3">Tài khoản/người dùng trong hệ thống</p>
                 </div>
             </div>
 
-            <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
-                <div class="card card-stats card-warning shadow">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-8">
-                                <h5 class="card-title text-uppercase text-muted mb-0">Phiếu mượn/trả</h5>
-                                <span class="h2 font-weight-bold mb-0" th:text="${tongPhieuBan}">4</span>
-                            </div>
-                            <div class="col-4 text-end">
-                                <div class="stat-icon bg-warning-gradient">
-                                    <i class="fas fa-right-left"></i>
-                                </div>
-                            </div>
+            <div class="col-xl-2 col-md-4 col-sm-6">
+                <div class="lib-stat warning p-4 h-100">
+                    <div class="d-flex justify-content-between align-items-start gap-3">
+                        <div>
+                            <h6 class="text-uppercase lib-muted mb-2">Phiếu mượn/trả</h6>
+                            <div class="display-6 fw-bold mb-0" th:text="${tongPhieuMuonTra}">4</div>
                         </div>
-                        <p class="mt-3 mb-0 text-muted text-sm">
-                            <span class="text-nowrap">theo dõi trạng thái luân chuyển tài liệu</span>
-                        </p>
+                        <div class="stat-icon"><i class="fas fa-right-left"></i></div>
                     </div>
+                    <p class="lib-muted mb-0 mt-3">Theo dõi trạng thái luân chuyển tài liệu</p>
                 </div>
             </div>
 
-            <div class="col-xl-3 col-md-6 col-sm-6 mb-3">
-                <div class="card card-stats card-info shadow">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-8">
-                                <h5 class="card-title text-uppercase text-muted mb-0">Phiếu nhập</h5>
-                                <span class="h2 font-weight-bold mb-0" th:text="${tongPhieuNhap}">4</span>
-                            </div>
-                            <div class="col-4 text-end">
-                                <div class="stat-icon bg-info-gradient">
-                                    <i class="fas fa-truck-ramp-box"></i>
-                                </div>
-                            </div>
+            <div class="col-xl-3 col-md-6 col-sm-6">
+                <div class="lib-stat danger p-4 h-100">
+                    <div class="d-flex justify-content-between align-items-start gap-3">
+                        <div>
+                            <h6 class="text-uppercase lib-muted mb-2">Phiếu nhập</h6>
+                            <div class="display-6 fw-bold mb-0" th:text="${tongPhieuNhapTaiLieu}">4</div>
                         </div>
-                        <p class="mt-3 mb-0 text-muted text-sm">
-                            <span class="text-nowrap">ghi nhận nhập tài liệu / nguồn cung</span>
-                        </p>
+                        <div class="stat-icon"><i class="fas fa-truck-ramp-box"></i></div>
                     </div>
+                    <p class="lib-muted mb-0 mt-3">Ghi nhận nhập tài liệu / nguồn cung</p>
                 </div>
             </div>
 
-            <div class="col-xl-3 col-md-6 col-sm-6 mb-3">
-                <div class="card card-stats card-purple shadow">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-8">
-                                <h5 class="card-title text-uppercase text-muted mb-0">Giá trị kho</h5>
-                                <span class="h2 font-weight-bold mb-0">
-                                    <span th:text="${#numbers.formatInteger(tongGiaTriKho.longValue(), 0, 'COMMA')}">2,500,000,000</span>
-                                    <small>đ</small>
-                                </span>
-                            </div>
-                            <div class="col-4 text-end">
-                                <div class="stat-icon bg-purple-gradient">
-                                    <i class="fas fa-boxes-stacked"></i>
-                                </div>
+            <div class="col-xl-3 col-md-6 col-sm-6">
+                <div class="lib-stat neutral p-4 h-100">
+                    <div class="d-flex justify-content-between align-items-start gap-3">
+                        <div>
+                            <h6 class="text-uppercase lib-muted mb-2">Giá trị kho</h6>
+                            <div class="display-6 fw-bold mb-0">
+                                <span th:text="${#numbers.formatInteger(tongGiaTriTaiLieu.longValue(), 0, 'COMMA')}">2,500,000,000</span>
+                                <small class="fs-6">đ</small>
                             </div>
                         </div>
-                        <p class="mt-3 mb-0 text-muted text-sm">
-                            <span class="text-nowrap">tổng giá trị dữ liệu đang lưu trữ</span>
-                        </p>
+                        <div class="stat-icon"><i class="fas fa-boxes-stacked"></i></div>
                     </div>
+                    <p class="lib-muted mb-0 mt-3">Tổng giá trị dữ liệu đang lưu trữ</p>
                 </div>
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-xl-4 col-lg-6 mb-4">
-                <div class="card shadow">
-                    <div class="card-header bg-danger text-white">
-                        <h6 class="m-0 font-weight-bold">
-                            <i class="fas fa-list-check me-2"></i>Nhóm UC đang triển khai
-                        </h6>
+        <div class="row mb-4 justify-content-center">
+            <div class="col-12 col-lg-11">
+                <div class="lib-card lib-card-strong p-4 p-lg-5">
+                    <div class="lib-toolbar mb-4">
+                        <div>
+                            <h2 class="h4 lib-section-title mb-1">Bảng Điều Khiển</h2>
+                            <p class="lib-muted mb-0">Tổng quan nhanh tình trạng hệ thống và các thao tác quản trị chính.</p>
+                        </div>
+                        <a href="/logout" class="btn btn-outline-primary">
+                            <i class="fas fa-arrow-right-from-bracket me-2"></i>Đăng xuất
+                        </a>
                     </div>
-                    <div class="card-body">
-                        <div class="d-flex flex-column gap-2">
-                            <div class="d-flex justify-content-between align-items-center border rounded p-2">
-                                <span>UC1 - Tài khoản và người dùng</span><span class="badge text-bg-success">Có</span>
+
+                    <div class="lib-feature-grid mb-4">
+                        <div class="lib-feature tailieu">
+                            <div class="feature-head">
+                                <span class="feature-icon"><i class="fas fa-book-open"></i></span>
+                                <h5 class="fw-bold mb-1">Tài liệu</h5>
+                                <p class="lib-muted mb-0">Quản lý đầu sách, số lượng và giá trị kho.</p>
                             </div>
-                            <div class="d-flex justify-content-between align-items-center border rounded p-2">
-                                <span>UC2 - Tài liệu thư viện</span><span class="badge text-bg-success">Có</span>
+                            <div class="feature-body">
+                                <a href="/taiLieu" class="btn btn-outline-success w-100">Mở phân hệ</a>
                             </div>
-                            <div class="d-flex justify-content-between align-items-center border rounded p-2">
-                                <span>UC3 - Tài nguyên số</span><span class="badge text-bg-secondary">Định hướng</span>
+                        </div>
+                        <div class="lib-feature docgia">
+                            <div class="feature-head">
+                                <span class="feature-icon"><i class="fas fa-users"></i></span>
+                                <h5 class="fw-bold mb-1">Độc giả</h5>
+                                <p class="lib-muted mb-0">Theo dõi thông tin người dùng và trạng thái mượn.</p>
                             </div>
-                            <div class="d-flex justify-content-between align-items-center border rounded p-2">
-                                <span>UC4 - Tìm kiếm và tra cứu</span><span class="badge text-bg-secondary">Định hướng</span>
+                            <div class="feature-body">
+                                <a href="/docGia" class="btn btn-outline-primary w-100">Mở phân hệ</a>
                             </div>
-                            <div class="d-flex justify-content-between align-items-center border rounded p-2">
-                                <span>UC5 - Mượn và trả sách</span><span class="badge text-bg-success">Có</span>
+                        </div>
+                        <div class="lib-feature muontra">
+                            <div class="feature-head">
+                                <span class="feature-icon"><i class="fas fa-right-left"></i></span>
+                                <h5 class="fw-bold mb-1">Mượn - trả</h5>
+                                <p class="lib-muted mb-0">Danh sách phiếu mượn, trả và ghi chú thao tác.</p>
+                            </div>
+                            <div class="feature-body">
+                                <a href="/muonTra" class="btn btn-outline-danger w-100">Mở phân hệ</a>
+                            </div>
+                        </div>
+                        <div class="lib-feature nhap">
+                            <div class="feature-head">
+                                <span class="feature-icon"><i class="fas fa-truck-ramp-box"></i></span>
+                                <h5 class="fw-bold mb-1">Nhập tài liệu</h5>
+                                <p class="lib-muted mb-0">Ghi nhận các phiếu nhập và nguồn cung.</p>
+                            </div>
+                            <div class="feature-body">
+                                <a href="/nhapTaiLieu" class="btn btn-outline-warning w-100">Mở phân hệ</a>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <div class="col-xl-8 col-lg-6 mb-4">
-                <div class="card shadow">
-                    <div class="card-header bg-primary text-white">
-                        <h6 class="m-0 font-weight-bold">
-                            <i class="fas fa-list-ul me-2"></i>Danh sách UC trong tài liệu
-                        </h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <div class="border rounded p-3 h-100">
-                                    <h6 class="fw-bold mb-2">UC6 - Quản lý đặt trước tài liệu</h6>
-                                    <p class="text-muted mb-0">Lưu lượt đặt, trạng thái chờ và lịch sử xử lý.</p>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="border rounded p-3 h-100">
-                                    <h6 class="fw-bold mb-2">UC7 - Xử phạt vi phạm thư viện</h6>
-                                    <p class="text-muted mb-0">Theo dõi vi phạm, tiền phạt và trạng thái hoàn tất.</p>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="border rounded p-3 h-100">
-                                    <h6 class="fw-bold mb-2">UC8 - Phòng đọc và phòng học nhóm</h6>
-                                    <p class="text-muted mb-0">Đăng ký chỗ, kiểm tra sức chứa và lịch phòng.</p>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="border rounded p-3 h-100">
-                                    <h6 class="fw-bold mb-2">UC9 - Thông báo</h6>
-                                    <p class="text-muted mb-0">Nhắc hạn, xác nhận mượn/trả và tin nhắn hệ thống.</p>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="border rounded p-3 h-100">
-                                    <h6 class="fw-bold mb-2">UC10 - Thống kê và báo cáo, UC11 - Quản trị hệ thống</h6>
-                                    <p class="text-muted mb-0">Tổng hợp báo cáo hoạt động và quản lý cấu hình, phân quyền, sao lưu.</p>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="border rounded-4 p-4 bg-white">
+                        <h6 class="fw-bold mb-3"><i class="fas fa-shield-halved me-2 text-success"></i>Quyền truy cập</h6>
+                        <p class="text-muted mb-2">Hệ thống đang phân quyền theo vai trò đăng nhập.</p>
+                        <ul class="mb-0 text-muted">
+                            <li>Admin: toàn quyền quản trị</li>
+                            <li>Giáo viên: quản lý dữ liệu nghiệp vụ</li>
+                            <li>Sinh viên: xem và thao tác trong phạm vi được cấp</li>
+                        </ul>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <div class="row mb-4">
-            <div class="col-12 text-center">
-                <a href="/use-cases" class="btn btn-outline-primary btn-lg">
-                    <i class="fas fa-diagram-project me-2"></i>Mở bảng Use Case đầy đủ
-                </a>
             </div>
         </div>
     </div>

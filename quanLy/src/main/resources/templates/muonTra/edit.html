@@ -3,94 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chỉnh Sửa Đơn Bán Hàng</title>
+    <title>Chỉnh Sửa Phiếu Mượn</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="/css/library-ui.css" rel="stylesheet">
 </head>
 <body>
+    <section class="lib-hero">
+        <div class="container position-relative">
+            <span class="eyebrow"><i class="fas fa-pen-to-square"></i>Chỉnh sửa phiếu</span>
+            <h1 class="display-5 fw-bold mb-3">Cập Nhật Phiếu Mượn - Trả</h1>
+            <p class="lead mb-0 text-white-50">Điều chỉnh thông tin mượn, số lượng và giá trị phiếu đang lưu.</p>
+        </div>
+    </section>
+
     <div class="container my-5">
         <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <div class="card">
-                    <div class="card-header bg-danger text-white">
-                        <h4 class="mb-0">
-                            <i class="fas fa-edit me-2"></i>
-                            UPDATE - Chỉnh Sửa Đơn Bán Hàng
-                        </h4>
+            <div class="col-xl-9 col-lg-10">
+                <div class="lib-form-shell">
+                    <div class="lib-form-head danger">
+                        <h4 class="mb-1"><i class="fas fa-pen-to-square me-2"></i>Chỉnh sửa phiếu mượn</h4>
+                        <p class="mb-0 text-white-50">Cập nhật lại dữ liệu trước khi lưu.</p>
                     </div>
-                    <div class="card-body">
+                    <div class="lib-form-body">
                         <form th:action="@{/muonTra/{id}(id=${ban.banId})}" method="post" th:object="${ban}">
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Mã Bán Hàng</label>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Mã phiếu mượn</label>
                                     <input type="text" class="form-control" th:field="*{banCode}" required>
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">ID Đồ Ăn Vặt</label>
+                                <div class="col-md-6">
+                                    <label class="form-label">Mã tài liệu</label>
                                     <input type="text" class="form-control" th:field="*{hangHoaID}" required>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Tên Hàng Hóa</label>
+                                <div class="col-md-12">
+                                    <label class="form-label">Tên tài liệu</label>
                                     <input type="text" class="form-control" th:field="*{tenHangHoa}" required>
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Tên Khách Hàng</label>
+                                <div class="col-md-6">
+                                    <label class="form-label">Tên độc giả</label>
                                     <input type="text" class="form-control" th:field="*{tenKhachHang}" required>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">
-                                        <i class="fas fa-calendar me-1"></i>Ngày Bán
-                                    </label>
-                                    <input type="datetime-local" class="form-control" th:field="*{ngayBan}" required>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Khách Hàng</label>
+                                <div class="col-md-6">
+                                    <label class="form-label">Mã độc giả</label>
                                     <input type="text" class="form-control" th:field="*{khachHang}">
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4 mb-3">
-                                    <label class="form-label">Số Lượng Bán</label>
-                                    <input type="number" class="form-control" th:field="*{soLuongBan}" required>
+                                <div class="col-md-6">
+                                    <label class="form-label"><i class="fas fa-calendar me-1"></i>Ngày mượn</label>
+                                    <input type="datetime-local" class="form-control" th:field="*{ngayBan}" required>
                                 </div>
-                                <div class="col-md-4 mb-3">
-                                    <label class="form-label">Giá Bán</label>
-                                    <input type="number" class="form-control" th:field="*{giaBan}" step="0.01" required>
+                                <div class="col-md-6">
+                                    <label class="form-label">Ghi chú</label>
+                                    <input type="text" class="form-control" th:field="*{ghiChu}">
                                 </div>
-                                <div class="col-md-4 mb-3">
-                                    <label class="form-label">Tổng Tiền</label>
-                                    <input type="number" class="form-control" th:field="*{tongTien}" step="0.01">
+                                <div class="col-md-4">
+                                    <label class="form-label">Số lượng</label>
+                                    <input type="number" class="form-control" th:field="*{soLuongBan}" min="1" required>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Giá Nhập</label>
-                                    <input type="number" class="form-control" th:field="*{giaNhap}" step="0.01">
+                                <div class="col-md-4">
+                                    <label class="form-label">Giá mượn</label>
+                                    <input type="number" class="form-control" th:field="*{giaBan}" step="0.01" min="0" required>
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">ID Đồ Ăn Vặt (Chỉ xem)</label>
-                                    <input type="text" class="form-control" th:value="${ban.hangHoaID}" readonly disabled>
+                                <div class="col-md-4">
+                                    <label class="form-label">Giá nhập tham chiếu</label>
+                                    <input type="number" class="form-control" th:field="*{giaNhap}" step="0.01" min="0">
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-12 mb-3">
-                                    <label class="form-label">Ghi Chú</label>
-                                    <textarea class="form-control" th:field="*{ghiChu}" rows="3"></textarea>
+                                <div class="col-md-12">
+                                    <label class="form-label">Tổng tiền</label>
+                                    <input type="number" class="form-control" th:field="*{tongTien}" step="0.01" min="0">
                                 </div>
                             </div>
-                            <div class="text-center">
-                                <button type="submit" class="btn btn-danger btn-lg">
-                                    <i class="fas fa-save me-2"></i>Cập Nhật
+
+                            <div class="lib-form-footer text-center">
+                                <button type="submit" class="btn btn-danger btn-lg me-2">
+                                    <i class="fas fa-save me-2"></i>Lưu thay đổi
                                 </button>
-                                <a th:href="@{/muonTra/{id}(id=${ban.banId})}" class="btn btn-info btn-lg ms-2">
-                                    <i class="fas fa-eye me-2"></i>Xem Chi Tiết
+                                <a th:href="@{/muonTra/{id}(id=${ban.banId})}" class="btn btn-outline-primary btn-lg me-2">
+                                    <i class="fas fa-eye me-2"></i>Xem chi tiết
                                 </a>
-                                <a href="/muonTra" class="btn btn-secondary btn-lg ms-2">
-                                    <i class="fas fa-times me-2"></i>Hủy
+                                <a href="/muonTra" class="btn btn-outline-secondary btn-lg">
+                                    <i class="fas fa-xmark me-2"></i>Hủy
                                 </a>
                             </div>
                         </form>
@@ -99,6 +91,7 @@
             </div>
         </div>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

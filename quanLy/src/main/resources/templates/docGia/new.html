@@ -3,55 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thêm Mới Độc Giả</title>
+    <title>Thêm Độc Giả</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="/css/library-ui.css" rel="stylesheet">
 </head>
 <body>
+    <section class="lib-hero">
+        <div class="container position-relative">
+            <span class="eyebrow"><i class="fas fa-user-plus"></i>Tạo độc giả</span>
+            <h1 class="display-5 fw-bold mb-3">Thêm Độc Giả Mới</h1>
+            <p class="lead mb-0 text-white-50">Tạo hồ sơ người dùng thư viện với biểu mẫu gọn và dễ nhập.</p>
+        </div>
+    </section>
+
     <div class="container my-5">
         <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <div class="card">
-                    <div class="card-header bg-primary text-white">
-                        <h4 class="mb-0">
-                            <i class="fas fa-plus me-2"></i>
-                            CREATE - Thêm Mới Độc Giả
-                        </h4>
+            <div class="col-xl-9 col-lg-10">
+                <div class="lib-form-shell">
+                    <div class="lib-form-head info">
+                        <h4 class="mb-1"><i class="fas fa-user-graduate me-2"></i>Hồ sơ độc giả</h4>
+                        <p class="mb-0 text-white-50">Nhập thông tin cơ bản để thêm độc giả vào hệ thống.</p>
                     </div>
-                    <div class="card-body">
+                    <div class="lib-form-body">
                         <form th:action="@{/docGia}" method="post" th:object="${khachHang}">
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">ID Độc Giả</label>
-                                    <input type="text" class="form-control" th:field="*{khachHangId}" required>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Mã độc giả</label>
+                                    <input type="text" class="form-control" th:field="*{khachHangId}" placeholder="DG004" required>
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Tên Độc Giả</label>
-                                    <input type="text" class="form-control" th:field="*{tenKhachHang}" required>
+                                <div class="col-md-6">
+                                    <label class="form-label">Tên độc giả</label>
+                                    <input type="text" class="form-control" th:field="*{tenKhachHang}" placeholder="Nguyễn Văn A" required>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Số Điện Thoại</label>
-                                    <input type="tel" class="form-control" th:field="*{soDienThoai}" required>
+                                <div class="col-md-6">
+                                    <label class="form-label">Số điện thoại</label>
+                                    <input type="tel" class="form-control" th:field="*{soDienThoai}" placeholder="0901234567" required>
                                 </div>
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-6">
                                     <label class="form-label">Email</label>
-                                    <input type="email" class="form-control" th:field="*{email}">
+                                    <input type="email" class="form-control" th:field="*{email}" placeholder="ten@truong.edu.vn">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Loại độc giả</label>
+                                    <select class="form-select" th:field="*{loaiKhachHang}">
+                                        <option value="Sinh viên">Sinh viên</option>
+                                        <option value="Giáo viên">Giáo viên</option>
+                                        <option value="Thường">Thường</option>
+                                        <option value="VIP">VIP</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Điểm tích lũy</label>
+                                    <input type="number" class="form-control" th:field="*{diemThuong}" min="0" value="0">
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">Địa chỉ</label>
+                                    <textarea class="form-control" th:field="*{diaChi}" rows="3" placeholder="Khoa / lớp / địa chỉ liên hệ"></textarea>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-12 mb-3">
-                                    <label class="form-label">Địa Chỉ</label>
-                                    <textarea class="form-control" th:field="*{diaChi}" rows="3"></textarea>
-                                </div>
-                            </div>
-                            <div class="text-center">
-                                <button type="submit" class="btn btn-primary btn-lg">
-                                    <i class="fas fa-save me-2"></i>Lưu Độc Giả
+
+                            <div class="lib-form-footer text-center">
+                                <button type="submit" class="btn btn-primary btn-lg me-2">
+                                    <i class="fas fa-save me-2"></i>Lưu độc giả
                                 </button>
-                                <a href="/docGia" class="btn btn-secondary btn-lg ms-2">
-                                    <i class="fas fa-times me-2"></i>Hủy
+                                <a href="/docGia" class="btn btn-outline-secondary btn-lg">
+                                    <i class="fas fa-xmark me-2"></i>Hủy
                                 </a>
                             </div>
                         </form>
@@ -60,6 +77,7 @@
             </div>
         </div>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

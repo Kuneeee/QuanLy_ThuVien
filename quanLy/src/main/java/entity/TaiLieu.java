@@ -9,23 +9,22 @@ import java.time.LocalDateTime;
  * Tích hợp đầy đủ tính năng từ entity gốc với Spring Boot
  */
 @Entity
-@Table(name = "hang_hoa")
+@Table(name = "tai_lieu")
 public class TaiLieu {
     @Id
-    @Column(name = "hanghoa_id", length = 50)
+    @Column(name = "tai_lieu_id", length = 50)
     private String hanghoaID;
     
-    @Column(name = "ten_hang_hoa", nullable = false, length = 200)
+    @Column(name = "ten_tai_lieu", nullable = false, length = 200)
     private String tenHangHoa;
     
-    @Column(name = "so_luong_hang_hoa", nullable = false)
+    @Column(name = "so_luong_ton", nullable = false)
     private Integer soLuongHangHoa;
     
-    // Thuộc tính bổ sung từ entity gốc
-    @Column(name = "nha_san_xuat", length = 200)
+    @Column(name = "tac_gia", length = 200)
     private String nhaSanXuat;
     
-    @Column(name = "nam_san_xuat")
+    @Column(name = "nam_xuat_ban")
     private Integer namSanXuat;
     
     @Column(name = "ngay_nhap")
@@ -34,7 +33,7 @@ public class TaiLieu {
     @Column(name = "gia_nhap", precision = 15, scale = 2)
     private BigDecimal giaNhap;
     
-    @Column(name = "loai_hang_hoa", length = 100)
+    @Column(name = "the_loai", length = 100)
     private String loaiHangHoa;
 
     // Constructors
