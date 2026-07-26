@@ -9,79 +9,70 @@
     <link href="/css/library-ui.css" rel="stylesheet">
 </head>
 <body>
-    <section class="lib-hero text-center">
-        <div class="container position-relative">
-            <span class="eyebrow"><i class="fas fa-truck-ramp-box"></i>Phân hệ nhập tài liệu</span>
-            <h1 class="display-4 fw-bold mb-3">
-                <i class="fas fa-boxes-stacked me-3"></i>Quản Lý Nhập Tài Liệu
-            </h1>
-            <p class="lead mb-0 text-white-50">Theo dõi các phiếu nhập, nhà cung cấp và giá trị bổ sung vào kho.</p>
-        </div>
-    </section>
+    <div class="admin-shell">
+        <aside th:replace="~{fragments/sidebar :: librarySidebar('taiLieu')}"></aside>
 
-    <div class="container my-5">
-        <div class="lib-card lib-card-strong p-4 p-lg-5">
-            <div class="lib-toolbar mb-4">
+        <main class="admin-main">
+            <header class="catalog-topbar">
                 <div>
-                    <h2 class="h4 lib-section-title mb-1">Danh Sách Phiếu Nhập</h2>
-                    <p class="lib-muted mb-0">Bố cục mới giúp dữ liệu nổi bật hơn và dễ thao tác hơn.</p>
+                    <h1 class="catalog-page-title mb-1">Danh Sách Phiếu Nhập</h1>
+                    <p class="catalog-page-subtitle mb-0">Theo dõi các phiếu nhập, nhà cung cấp và giá trị bổ sung vào kho.</p>
                 </div>
-                <div class="d-flex flex-wrap gap-2">
+                <div class="catalog-actions">
                     <a href="/" class="btn btn-outline-secondary"><i class="fas fa-house me-2"></i>Trang chủ</a>
                     <a href="/nhapTaiLieu/new" class="btn btn-warning"><i class="fas fa-plus me-2"></i>Thêm phiếu nhập</a>
                 </div>
-            </div>
+            </header>
 
-            <div class="lib-table-shell">
+            <section class="catalog-summary-row mb-3">
+                <div class="catalog-summary-card blue"><span class="label">Tổng phiếu nhập</span><span class="value" th:text="${#lists.size(nhapList)}">0</span></div>
+                <div class="catalog-summary-card green"><span class="label">Đang xử lý</span><span class="value" th:text="${#lists.size(nhapList)}">0</span></div>
+                <div class="catalog-summary-card amber"><span class="label">Nhà cung cấp</span><span class="value">+</span></div>
+            </section>
+
+            <section class="catalog-table-shell">
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle">
+                    <table class="table align-middle mb-0">
                         <thead>
                             <tr>
-                                <th>Mã phiếu</th>
-                                <th>Tài liệu</th>
-                                <th>Số lượng</th>
-                                <th>Giá nhập</th>
-                                <th>Ngày nhập</th>
-                                <th>Nhà cung cấp</th>
-                                <th class="text-center">Thao tác</th>
+                                <th>Mã Phiếu</th>
+                                <th>Tài Liệu</th>
+                                <th>Số Lượng</th>
+                                <th>Giá Nhập</th>
+                                <th>Ngày Nhập</th>
+                                <th>Nhà Cung Cấp</th>
+                                <th class="text-center">Chức Năng</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr th:each="nhap : ${nhapList}">
                                 <td>
-                                    <div class="fw-bold" th:text="${nhap.maNhapHang}">NH001</div>
+                                    <div class="fw-semibold" th:text="${nhap.maNhapHang}">NH001</div>
                                     <div class="small text-muted" th:text="${'ID #'+nhap.nhapId}">ID #1</div>
                                 </td>
                                 <td>
-                                    <div class="fw-bold" th:text="${nhap.tenHangHoa}">Lập trình Java căn bản</div>
+                                    <div class="fw-semibold" th:text="${nhap.tenHangHoa}">Lập trình Java căn bản</div>
                                     <div class="small text-muted" th:text="${nhap.hanghoaID}">TL001</div>
                                 </td>
                                 <td th:text="${nhap.soLuongNhap}">18</td>
                                 <td th:text="${nhap.giaNhap != null ? #numbers.formatDecimal(nhap.giaNhap, 0, 'COMMA', 0, 'POINT') + ' ₫' : '0 ₫'}">85,000 ₫</td>
                                 <td th:text="${nhap.ngayNhap != null ? #temporals.format(nhap.ngayNhap, 'dd/MM/yyyy HH:mm') : 'Chưa cập nhật'}">01/01/2025 08:00</td>
                                 <td th:text="${nhap.nhaCungCap != null ? nhap.nhaCungCap : '-'}">NXB Khoa học kỹ thuật</td>
-                                <td class="text-center">
-                                    <div class="d-inline-flex flex-wrap justify-content-center gap-2 action-buttons">
-                                        <a th:href="@{/nhapTaiLieu/{id}(id=${nhap.nhapId})}" class="btn btn-sm btn-outline-primary rounded-pill px-3"><i class="fas fa-eye"></i> Xem</a>
-                                        <a th:href="@{/nhapTaiLieu/{id}/edit(id=${nhap.nhapId})}" class="btn btn-sm btn-outline-warning rounded-pill px-3"><i class="fas fa-pen-to-square"></i> Sửa</a>
-                                        <button class="btn btn-sm btn-outline-danger rounded-pill px-3 delete-btn" th:data-id="${nhap.nhapId}" th:data-name="${nhap.maNhapHang}"><i class="fas fa-trash"></i> Xóa</button>
+                                <td>
+                                    <div class="catalog-action-group">
+                                        <a th:href="@{/nhapTaiLieu/{id}/edit(id=${nhap.nhapId})}" class="catalog-action-btn edit" title="Sửa"><i class="fas fa-pen-to-square"></i></a>
+                                        <button class="catalog-action-btn delete delete-btn" type="button" th:data-id="${nhap.nhapId}" th:data-name="${nhap.maNhapHang}" title="Xóa"><i class="fas fa-trash"></i></button>
                                     </div>
                                 </td>
                             </tr>
                             <tr th:if="${#lists.isEmpty(nhapList)}">
-                                <td colspan="7">
-                                    <div class="lib-empty-state">
-                                        <i class="fas fa-box-open fa-2x mb-3"></i>
-                                        <div class="fw-bold mb-1">Chưa có phiếu nhập nào</div>
-                                        <div class="small">Dữ liệu mẫu sẽ xuất hiện sau khi seeder chạy.</div>
-                                    </div>
-                                </td>
+                                <td colspan="7"><div class="catalog-empty-state"><i class="fas fa-box-open fa-2x mb-3"></i><div class="fw-bold mb-1">Chưa có phiếu nhập nào</div><div class="small">Dữ liệu mẫu sẽ xuất hiện sau khi seeder chạy.</div></div></td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-            </div>
-        </div>
+            </section>
+        </main>
     </div>
 
     <div class="modal fade" id="deleteModal" tabindex="-1">

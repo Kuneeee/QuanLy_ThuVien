@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Phòng Và Vi Phạm</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="/css/library-ui.css" rel="stylesheet">
+</head>
+<body>
+    <div class="admin-shell">
+        <aside th:replace="~{fragments/sidebar :: librarySidebar('phong')}"></aside>
+
+        <main class="admin-main">
+            <header class="catalog-topbar">
+                <div>
+                    <h1 class="catalog-page-title mb-1">Quản Lý Phòng Và Vi Phạm</h1>
+                    <p class="catalog-page-subtitle mb-0">Giáo viên và sinh viên chỉ có thể đặt phòng; phần vi phạm và biên lai chỉ dành cho quản trị viên.</p>
+                </div>
+                <div class="catalog-actions">
+                    <a href="#booking-section" class="btn btn-outline-info"><i class="fas fa-door-open me-2"></i>Đặt phòng</a>
+                    <a th:if="${canManagePenalty}" href="#penalty-section" class="btn btn-outline-warning"><i class="fas fa-triangle-exclamation me-2"></i>Xử lý vi phạm</a>
+                </div>
+            </header>
+
+            <div th:if="${param.success}" class="alert alert-success mb-3" role="alert">Thao tác đã được lưu thành công.</div>
+            <div th:if="${error}" class="alert alert-danger mb-3" role="alert" th:text="${error}">Có lỗi xảy ra.</div>
+
+            <section class="catalog-summary-row mb-3">
+                <div class="catalog-summary-card blue"><span class="label">Đặt phòng</span><span class="value" th:text="${#lists.size(datPhongList)}">0</span></div>
+                <div class="catalog-summary-card green"><span class="label">Lịch trống</span><span class="value" th:text="${#lists.size(lichTrongList)}">0</span></div>
+                <div class="catalog-summary-card amber"><span class="label">Vi phạm</span><span class="value" th:text="${#lists.size(viPhamList)}">0</span></div>
+            </section>
+
+            <section class="row g-3 mb-4" id="booking-section">
+                <div class="col-lg-4">
+                    <div class="lib-form-shell h-100">
+                        <div class="lib-form-head">
+                            <h4 class="mb-1"><i class="fas fa-door-open me-2"></i>Thông Tin Phòng Đặt</h4>
+                            <p class="mb-0 text-white-50">Nhập thông tin phòng và lịch trống để người dùng dễ chọn khung giờ.</p>
+                        </div>
+                        <div class="lib-form-body">
+                            <form method="post" action="/phong/lich-trong" th:if="${canManageSchedule}">
+                                <div class="row g-2">
+                                    <div class="col-12"><label class="form-label">Mã phòng</label><input type="text" class="form-control" name="maPhong" placeholder="P101" required></div>
+                                    <div class="col-12"><label class="form-label">Tên phòng</label><input type="text" class="form-control" name="tenPhong" placeholder="Phòng học nhóm 1" required></div>
+                                    <div class="col-6"><label class="form-label">Bắt đầu</label><input type="datetime-local" class="form-control" name="batDau" required></div>
+                                    <div class="col-6"><label class="form-label">Kết thúc</label><input type="datetime-local" class="form-control" name="ketThuc" required></div>
+                                    <div class="col-12"><label class="form-label">Ghi chú</label><input type="text" class="form-control" name="ghiChu" placeholder="Lịch trống buổi sáng"></div>
+                                </div>
+                                <button class="btn btn-outline-primary w-100 mt-3" type="submit"><i class="fas fa-calendar-plus me-2"></i>Thêm lịch trống</button>
+                            </form>
+                            <div th:if="${!canManageSchedule}" class="alert alert-secondary mb-0">
+                                Lịch trống chỉ có quản trị viên mới được thêm.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-8">
+                    <div class="catalog-table-shell h-100">
+                        <div class="table-responsive">
+                            <table class="table align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Mã Phòng</th>
+                                        <th>Tên Phòng</th>
+                                        <th>Người Đặt</th>
+                                        <th>Khung Giờ</th>
+                                        <th>Trạng Thái</th>
+                                        <th class="text-center" th:if="${canManagePenalty}">Chức Năng</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="datPhong : ${datPhongList}">
+                                        <td th:text="${datPhong.maPhong}">P101</td>
+                                        <td>
+                                            <div class="fw-semibold" th:text="${datPhong.tenPhong}">Phòng học nhóm 1</div>
+                                            <div class="small text-muted" th:text="${datPhong.maDatPhong}">DPH001</div>
+                                        </td>
+                                        <td>
+                                            <div class="fw-semibold" th:text="${datPhong.tenNguoiDat}">Nguyễn Văn An</div>
+                                            <div class="small text-muted" th:text="${datPhong.loaiNguoiDat}">Sinh viên</div>
+                                        </td>
+                                        <td th:text="${datPhong.thoiGianBatDau != null ? #temporals.format(datPhong.thoiGianBatDau, 'dd/MM/yyyy HH:mm') + ' - ' + #temporals.format(datPhong.thoiGianKetThuc, 'HH:mm') : '-'}">26/07/2026 08:00 - 10:00</td>
+                                        <td><span class="badge rounded-pill bg-secondary" th:text="${datPhong.trangThai != null ? datPhong.trangThai : 'Đã đặt'}">Đã đặt</span></td>
+                                        <td class="text-center" th:if="${canManagePenalty}">
+                                            <div class="catalog-action-group justify-content-center">
+                                                <form th:action="@{/phong/huy/{id}(id=${datPhong.id})}" method="post" class="d-inline">
+                                                    <button type="submit" class="catalog-action-btn delete" title="Hủy đặt phòng"><i class="fas fa-xmark"></i></button>
+                                                </form>
+                                                <form th:action="@{/phong/gia-han/{id}(id=${datPhong.id})}" method="post" class="d-inline">
+                                                    <input type="hidden" name="soPhutGiaHan" value="60">
+                                                    <button type="submit" class="catalog-action-btn edit" title="Gia hạn 60 phút"><i class="fas fa-clock-rotate-left"></i></button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr th:if="${#lists.isEmpty(datPhongList)}">
+                                        <td colspan="6"><div class="catalog-empty-state"><div class="fw-bold mb-1">Chưa có phòng được đặt</div><div class="small">Tạo yêu cầu đặt phòng đầu tiên ở khung bên trái.</div></div></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="row g-3 mb-4">
+                <div class="col-lg-4">
+                    <div class="lib-form-shell h-100">
+                        <div class="lib-form-head info">
+                            <h4 class="mb-1"><i class="fas fa-bookmark me-2"></i>Tạo Yêu Cầu Đặt Trước</h4>
+                            <p class="mb-0 text-white-50">Giáo viên và sinh viên chỉ sử dụng phần này.</p>
+                        </div>
+                        <div class="lib-form-body">
+                            <form method="post" action="/phong/dat-phong" th:object="${datPhongForm}">
+                                <div class="row g-2">
+                                    <div class="col-6"><label class="form-label">Mã đặt</label><input type="text" class="form-control" th:field="*{maDatPhong}" placeholder="DPH002"></div>
+                                    <div class="col-6"><label class="form-label">Mã phòng</label><input type="text" class="form-control" th:field="*{maPhong}" placeholder="P102" required></div>
+                                    <div class="col-12"><label class="form-label">Tên phòng</label><input type="text" class="form-control" th:field="*{tenPhong}" placeholder="Phòng đọc yên tĩnh" required></div>
+                                    <div class="col-6"><label class="form-label">Người đặt</label><input type="text" class="form-control" th:field="*{tenNguoiDat}" placeholder="Nguyễn Văn An" required></div>
+                                    <div class="col-6"><label class="form-label">Mã người đặt</label><input type="text" class="form-control" th:field="*{maNguoiDat}" placeholder="DG001"></div>
+                                    <div class="col-6"><label class="form-label">Loại người đặt</label><input type="text" class="form-control" th:field="*{loaiNguoiDat}" placeholder="Sinh viên"></div>
+                                    <div class="col-6"><label class="form-label">Số lượng</label><input type="number" class="form-control" th:field="*{soLuongNguoi}" min="1"></div>
+                                    <div class="col-6"><label class="form-label">Bắt đầu</label><input type="datetime-local" class="form-control" th:field="*{thoiGianBatDau}"></div>
+                                    <div class="col-6"><label class="form-label">Kết thúc</label><input type="datetime-local" class="form-control" th:field="*{thoiGianKetThuc}"></div>
+                                    <div class="col-12"><label class="form-label">Mục đích</label><input type="text" class="form-control" th:field="*{mucDich}" placeholder="Học nhóm, thảo luận"></div>
+                                    <div class="col-12"><label class="form-label">Ghi chú</label><textarea class="form-control" th:field="*{ghiChu}" rows="2"></textarea></div>
+                                </div>
+                                <button class="btn btn-primary w-100 mt-3" type="submit"><i class="fas fa-bookmark me-2"></i>Tạo yêu cầu đặt phòng</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <div class="catalog-table-shell h-100">
+                        <div class="table-responsive">
+                            <table class="table align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Mã đặt</th>
+                                        <th>Phòng</th>
+                                        <th>Người đặt</th>
+                                        <th>Khung giờ</th>
+                                        <th>Ghi chú</th>
+                                        <th th:if="${canManagePenalty}" class="text-center">Chức Năng</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="datPhong : ${datPhongList}">
+                                        <td th:text="${datPhong.maDatPhong}">DPH001</td>
+                                        <td th:text="${datPhong.tenPhong}">Phòng học nhóm 1</td>
+                                        <td th:text="${datPhong.tenNguoiDat}">Nguyễn Văn An</td>
+                                        <td th:text="${datPhong.thoiGianBatDau != null ? #temporals.format(datPhong.thoiGianBatDau, 'dd/MM/yyyy HH:mm') + ' - ' + #temporals.format(datPhong.thoiGianKetThuc, 'HH:mm') : '-'}">26/07/2026 08:00 - 10:00</td>
+                                        <td th:text="${datPhong.ghiChu != null ? datPhong.ghiChu : '-'}">Đặt phòng buổi sáng</td>
+                                        <td th:if="${canManagePenalty}" class="text-center">
+                                            <div class="catalog-action-group justify-content-center">
+                                                <form th:action="@{/phong/huy/{id}(id=${datPhong.id})}" method="post" class="d-inline">
+                                                    <button type="submit" class="catalog-action-btn delete" title="Hủy"><i class="fas fa-xmark"></i></button>
+                                                </form>
+                                                <form th:action="@{/phong/gia-han/{id}(id=${datPhong.id})}" method="post" class="d-inline">
+                                                    <input type="hidden" name="soPhutGiaHan" value="60">
+                                                    <button type="submit" class="catalog-action-btn edit" title="Gia hạn"><i class="fas fa-plus"></i></button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr th:if="${#lists.isEmpty(datPhongList)}">
+                                        <td colspan="6"><div class="catalog-empty-state"><div class="fw-bold mb-1">Chưa có đặt phòng</div><div class="small">Yêu cầu đặt phòng sẽ hiển thị tại đây.</div></div></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="row g-3 mb-4" th:if="${canManagePenalty}" id="penalty-section">
+                <div class="col-lg-4">
+                    <div class="lib-form-shell h-100">
+                        <div class="lib-form-head danger">
+                            <h4 class="mb-1"><i class="fas fa-triangle-exclamation me-2"></i>Ghi Nhận Tình Trạng</h4>
+                            <p class="mb-0 text-white-50">Chỉ quản trị viên mới ghi nhận vi phạm.</p>
+                        </div>
+                        <div class="lib-form-body">
+                            <form method="post" action="/phong/vi-pham" th:object="${viPhamForm}">
+                                <div class="row g-2">
+                                    <div class="col-6"><label class="form-label">Biên lai</label><input type="text" class="form-control" th:field="*{soBienLai}" placeholder="BLP0002"></div>
+                                    <div class="col-6"><label class="form-label">Loại vi phạm</label>
+                                        <select class="form-select" th:field="*{loaiViPham}">
+                                            <option value="Mất">Mất</option>
+                                            <option value="Hư hỏng">Hư hỏng</option>
+                                            <option value="Quá hạn mượn">Quá hạn mượn</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-6"><label class="form-label">Mã độc giả</label><input type="text" class="form-control" th:field="*{maDocGia}" placeholder="DG002" required></div>
+                                    <div class="col-6"><label class="form-label">Tên độc giả</label><input type="text" class="form-control" th:field="*{tenDocGia}" placeholder="Trần Thị Bích" required></div>
+                                    <div class="col-6"><label class="form-label">Mã tài liệu</label><input type="text" class="form-control" th:field="*{maTaiLieu}" placeholder="TL001"></div>
+                                    <div class="col-6"><label class="form-label">Tên tài liệu</label><input type="text" class="form-control" th:field="*{tenTaiLieu}" placeholder="Lập trình Java căn bản"></div>
+                                    <div class="col-6"><label class="form-label">Số ngày quá hạn</label><input type="number" class="form-control" th:field="*{soNgayQuaHan}" min="0"></div>
+                                    <div class="col-6"><label class="form-label">Số lượng</label><input type="number" class="form-control" th:field="*{soLuong}" min="1"></div>
+                                    <div class="col-12"><label class="form-label">Ghi chú</label><textarea class="form-control" th:field="*{ghiChu}" rows="2"></textarea></div>
+                                </div>
+                                <button class="btn btn-danger w-100 mt-3" type="submit"><i class="fas fa-save me-2"></i>Ghi nhận tình trạng</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <div class="catalog-table-shell h-100">
+                        <div class="table-responsive">
+                            <table class="table align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Biên lai</th>
+                                        <th>Độc Giả</th>
+                                        <th>Tài Liệu</th>
+                                        <th>Loại</th>
+                                        <th>Đền bù</th>
+                                        <th>Phạt</th>
+                                        <th>Tổng</th>
+                                        <th class="text-center">In biên lai</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="viPham : ${viPhamList}">
+                                        <td th:text="${viPham.soBienLai}">BLP0001</td>
+                                        <td th:text="${viPham.tenDocGia}">Trần Thị Bích</td>
+                                        <td th:text="${viPham.tenTaiLieu != null ? viPham.tenTaiLieu : '-'}">Lập trình Java căn bản</td>
+                                        <td th:text="${viPham.loaiViPham}">Quá hạn mượn</td>
+                                        <td th:text="${viPham.soTienDenBu != null ? #numbers.formatDecimal(viPham.soTienDenBu, 0, 'COMMA', 0, 'POINT') + ' ₫' : '0 ₫'}">0 ₫</td>
+                                        <td th:text="${viPham.soTienPhat != null ? #numbers.formatDecimal(viPham.soTienPhat, 0, 'COMMA', 0, 'POINT') + ' ₫' : '0 ₫'}">15,000 ₫</td>
+                                        <td class="fw-bold" th:text="${viPham.tongTien != null ? #numbers.formatDecimal(viPham.tongTien, 0, 'COMMA', 0, 'POINT') + ' ₫' : '0 ₫'}">15,000 ₫</td>
+                                        <td class="text-center">
+                                            <a th:href="@{/phong/bien-lai/{id}(id=${viPham.id})}" class="btn btn-outline-success btn-sm"><i class="fas fa-print me-1"></i>In</a>
+                                        </td>
+                                    </tr>
+                                    <tr th:if="${#lists.isEmpty(viPhamList)}">
+                                        <td colspan="8"><div class="catalog-empty-state"><div class="fw-bold mb-1">Chưa có vi phạm</div><div class="small">Biên lai và chi phí sẽ hiển thị ở đây.</div></div></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="row g-3" th:if="${canManagePenalty}">
+                <div class="col-lg-12">
+                    <div class="catalog-table-shell">
+                        <div class="table-responsive">
+                            <table class="table align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Mã phòng</th>
+                                        <th>Tên phòng</th>
+                                        <th>Bắt đầu</th>
+                                        <th>Kết thúc</th>
+                                        <th>Ghi chú</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="lichTrong : ${lichTrongList}">
+                                        <td th:text="${lichTrong.maPhong}">P101</td>
+                                        <td th:text="${lichTrong.tenPhong}">Phòng học nhóm 1</td>
+                                        <td th:text="${lichTrong.batDau != null ? #temporals.format(lichTrong.batDau, 'dd/MM/yyyy HH:mm') : '-'}">27/07/2026 08:00</td>
+                                        <td th:text="${lichTrong.ketThuc != null ? #temporals.format(lichTrong.ketThuc, 'dd/MM/yyyy HH:mm') : '-'}">27/07/2026 12:00</td>
+                                        <td th:text="${lichTrong.ghiChu != null ? lichTrong.ghiChu : '-'}">Lịch trống buổi sáng</td>
+                                    </tr>
+                                    <tr th:if="${#lists.isEmpty(lichTrongList)}">
+                                        <td colspan="5"><div class="catalog-empty-state"><div class="fw-bold mb-1">Chưa có lịch trống</div><div class="small">Quản trị viên có thể thêm lịch ở khối đặt phòng.</div></div></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

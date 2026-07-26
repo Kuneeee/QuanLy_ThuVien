@@ -3,6 +3,7 @@ package service;
 import entity.DocGia;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import repository.DocGiaRepository;
 
 import java.math.BigDecimal;
@@ -15,11 +16,17 @@ public class DocGiaService {
     
     @Autowired
     private DocGiaRepository customerRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     
     // CREATE - Tạo mới khách hàng
     public DocGia createCustomer(DocGia khachHang) {
         if (khachHang.getKhachHangId() == null || khachHang.getKhachHangId().isEmpty()) {
             khachHang.setKhachHangId(taoMaKhachHangTuDong());
+        }
+        if (khachHang.getMatKhau() != null && !khachHang.getMatKhau().isBlank()) {
+            khachHang.setMatKhau(passwordEncoder.encode(khachHang.getMatKhau()));
         }
         return customerRepository.save(khachHang);
     }
@@ -43,6 +50,11 @@ public class DocGiaService {
                     khachHang.setEmail(khachHangDetails.getEmail());
                     khachHang.setDiaChi(khachHangDetails.getDiaChi());
                     khachHang.setLoaiKhachHang(khachHangDetails.getLoaiKhachHang());
+                    khachHang.setTaiKhoan(khachHangDetails.getTaiKhoan());
+                    khachHang.setQuyenHan(khachHangDetails.getQuyenHan());
+                    if (khachHangDetails.getMatKhau() != null && !khachHangDetails.getMatKhau().isBlank()) {
+                        khachHang.setMatKhau(passwordEncoder.encode(khachHangDetails.getMatKhau()));
+                    }
                     return customerRepository.save(khachHang);
                 })
                 .orElse(null);

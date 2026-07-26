@@ -3,176 +3,194 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${title}">Dashboard thư viện</title>
+    <title th:text="${title}">Màn hình quản trị hệ thống</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="/css/library-ui.css" rel="stylesheet">
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark lib-navbar">
-        <div class="container">
-            <a class="navbar-brand" href="/">
-                <i class="fas fa-book-open me-2"></i>Quản Lý Thư Viện
-            </a>
-            <div class="navbar-nav ms-auto">
-                <a class="nav-link" href="/"><i class="fas fa-home me-1"></i>Trang chủ</a>
-                <a class="nav-link active" href="/dashboard"><i class="fas fa-chart-pie me-1"></i>Dashboard</a>
-                <a class="nav-link" href="/taiLieu"><i class="fas fa-book me-1"></i>Tài liệu</a>
-                <a class="nav-link" href="/docGia"><i class="fas fa-users me-1"></i>Độc giả</a>
-                <a class="nav-link" href="/muonTra"><i class="fas fa-right-left me-1"></i>Mượn - trả</a>
-                <a class="nav-link" href="/logout"><i class="fas fa-arrow-right-from-bracket me-1"></i>Đăng xuất</a>
-            </div>
-        </div>
-    </nav>
+    <div class="admin-shell">
+        <aside th:replace="~{fragments/sidebar :: librarySidebar('dashboard')}"></aside>
 
-    <section class="lib-hero">
-        <div class="container position-relative">
-            <span class="eyebrow"><i class="fas fa-chart-pie"></i>Bảng điều khiển</span>
-            <h1 class="display-5 fw-bold mb-3">Tổng quan hệ thống thư viện</h1>
-            <p class="lead mb-0 text-white-50">Theo dõi nhanh tài liệu, độc giả, mượn-trả và nhập tài liệu trong một màn hình.</p>
-        </div>
-    </section>
-
-    <div class="container my-5">
-        <div class="row g-4 mb-4">
-            <div class="col-xl-2 col-md-4 col-sm-6">
-                <div class="lib-stat primary p-4 h-100">
-                    <div class="d-flex justify-content-between align-items-start gap-3">
-                        <div>
-                            <h6 class="text-uppercase lib-muted mb-2">Tài liệu</h6>
-                            <div class="display-6 fw-bold mb-0" th:text="${tongTaiLieu}">8</div>
-                        </div>
-                        <div class="stat-icon"><i class="fas fa-book"></i></div>
-                    </div>
-                    <p class="lib-muted mb-0 mt-3">Dữ liệu tài liệu đang quản lý</p>
+        <main class="admin-main">
+            <header class="admin-topbar">
+                <div>
+                    <h1 class="page-title mb-1">Màn Hình Quản Trị Hệ Thống</h1>
+                    <p class="page-subtitle mb-0">Dự án hiện có 4 module đã triển khai; các chức năng còn lại được ghi nhận theo đúng tài liệu để phát triển tiếp.</p>
                 </div>
-            </div>
-
-            <div class="col-xl-2 col-md-4 col-sm-6">
-                <div class="lib-stat info p-4 h-100">
-                    <div class="d-flex justify-content-between align-items-start gap-3">
-                        <div>
-                            <h6 class="text-uppercase lib-muted mb-2">Độc giả</h6>
-                            <div class="display-6 fw-bold mb-0" th:text="${tongDocGia}">6</div>
-                        </div>
-                        <div class="stat-icon"><i class="fas fa-user-graduate"></i></div>
-                    </div>
-                    <p class="lib-muted mb-0 mt-3">Tài khoản/người dùng trong hệ thống</p>
+                <div class="admin-top-actions">
+                    <a class="btn btn-outline-secondary rounded-pill" href="#usecase-section">
+                        <i class="fas fa-diagram-project me-2"></i>Xem bảng Use Case đầy đủ
+                    </a>
                 </div>
-            </div>
+            </header>
 
-            <div class="col-xl-2 col-md-4 col-sm-6">
-                <div class="lib-stat warning p-4 h-100">
-                    <div class="d-flex justify-content-between align-items-start gap-3">
-                        <div>
-                            <h6 class="text-uppercase lib-muted mb-2">Phiếu mượn/trả</h6>
-                            <div class="display-6 fw-bold mb-0" th:text="${tongPhieuMuonTra}">4</div>
+            <section class="stat-grid">
+                <article class="module-card module-teal">
+                    <div class="module-card-head">
+                        <div class="module-icon"><i class="fas fa-book"></i></div>
+                        <div class="module-copy">
+                            <h2>Tài Liệu Thư Viện</h2>
+                            <p>Quản lý đầu sách, metadata và số lượng tài liệu</p>
                         </div>
-                        <div class="stat-icon"><i class="fas fa-right-left"></i></div>
                     </div>
-                    <p class="lib-muted mb-0 mt-3">Theo dõi trạng thái luân chuyển tài liệu</p>
-                </div>
-            </div>
-
-            <div class="col-xl-3 col-md-6 col-sm-6">
-                <div class="lib-stat danger p-4 h-100">
-                    <div class="d-flex justify-content-between align-items-start gap-3">
-                        <div>
-                            <h6 class="text-uppercase lib-muted mb-2">Phiếu nhập</h6>
-                            <div class="display-6 fw-bold mb-0" th:text="${tongPhieuNhapTaiLieu}">4</div>
-                        </div>
-                        <div class="stat-icon"><i class="fas fa-truck-ramp-box"></i></div>
-                    </div>
-                    <p class="lib-muted mb-0 mt-3">Ghi nhận nhập tài liệu / nguồn cung</p>
-                </div>
-            </div>
-
-            <div class="col-xl-3 col-md-6 col-sm-6">
-                <div class="lib-stat neutral p-4 h-100">
-                    <div class="d-flex justify-content-between align-items-start gap-3">
-                        <div>
-                            <h6 class="text-uppercase lib-muted mb-2">Giá trị kho</h6>
-                            <div class="display-6 fw-bold mb-0">
-                                <span th:text="${#numbers.formatInteger(tongGiaTriTaiLieu.longValue(), 0, 'COMMA')}">2,500,000,000</span>
-                                <small class="fs-6">đ</small>
-                            </div>
-                        </div>
-                        <div class="stat-icon"><i class="fas fa-boxes-stacked"></i></div>
-                    </div>
-                    <p class="lib-muted mb-0 mt-3">Tổng giá trị dữ liệu đang lưu trữ</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="row mb-4 justify-content-center">
-            <div class="col-12 col-lg-11">
-                <div class="lib-card lib-card-strong p-4 p-lg-5">
-                    <div class="lib-toolbar mb-4">
-                        <div>
-                            <h2 class="h4 lib-section-title mb-1">Bảng Điều Khiển</h2>
-                            <p class="lib-muted mb-0">Tổng quan nhanh tình trạng hệ thống và các thao tác quản trị chính.</p>
-                        </div>
-                        <a href="/logout" class="btn btn-outline-primary">
-                            <i class="fas fa-arrow-right-from-bracket me-2"></i>Đăng xuất
+                    <div class="module-divider"></div>
+                    <div class="module-actions">
+                        <a href="/taiLieu" class="btn btn-outline-success rounded-pill px-4">
+                            <i class="fas fa-list me-2"></i>Xem tất cả
+                        </a>
+                        <a href="/taiLieu/new" class="btn btn-success rounded-pill px-4">
+                            <i class="fas fa-plus me-2"></i>Thêm mới
                         </a>
                     </div>
+                    <p class="module-note"><i class="fas fa-circle-info me-2"></i>Phục vụ quản lý mã tài liệu, số lượng và thời điểm nhập</p>
+                </article>
 
-                    <div class="lib-feature-grid mb-4">
-                        <div class="lib-feature tailieu">
-                            <div class="feature-head">
-                                <span class="feature-icon"><i class="fas fa-book-open"></i></span>
-                                <h5 class="fw-bold mb-1">Tài liệu</h5>
-                                <p class="lib-muted mb-0">Quản lý đầu sách, số lượng và giá trị kho.</p>
-                            </div>
-                            <div class="feature-body">
-                                <a href="/taiLieu" class="btn btn-outline-success w-100">Mở phân hệ</a>
-                            </div>
-                        </div>
-                        <div class="lib-feature docgia">
-                            <div class="feature-head">
-                                <span class="feature-icon"><i class="fas fa-users"></i></span>
-                                <h5 class="fw-bold mb-1">Độc giả</h5>
-                                <p class="lib-muted mb-0">Theo dõi thông tin người dùng và trạng thái mượn.</p>
-                            </div>
-                            <div class="feature-body">
-                                <a href="/docGia" class="btn btn-outline-primary w-100">Mở phân hệ</a>
-                            </div>
-                        </div>
-                        <div class="lib-feature muontra">
-                            <div class="feature-head">
-                                <span class="feature-icon"><i class="fas fa-right-left"></i></span>
-                                <h5 class="fw-bold mb-1">Mượn - trả</h5>
-                                <p class="lib-muted mb-0">Danh sách phiếu mượn, trả và ghi chú thao tác.</p>
-                            </div>
-                            <div class="feature-body">
-                                <a href="/muonTra" class="btn btn-outline-danger w-100">Mở phân hệ</a>
-                            </div>
-                        </div>
-                        <div class="lib-feature nhap">
-                            <div class="feature-head">
-                                <span class="feature-icon"><i class="fas fa-truck-ramp-box"></i></span>
-                                <h5 class="fw-bold mb-1">Nhập tài liệu</h5>
-                                <p class="lib-muted mb-0">Ghi nhận các phiếu nhập và nguồn cung.</p>
-                            </div>
-                            <div class="feature-body">
-                                <a href="/nhapTaiLieu" class="btn btn-outline-warning w-100">Mở phân hệ</a>
-                            </div>
+                <article class="module-card module-blue">
+                    <div class="module-card-head">
+                        <div class="module-icon"><i class="fas fa-graduation-cap"></i></div>
+                        <div class="module-copy">
+                            <h2>Người Dùng / Phân Quyền</h2>
+                            <p>Quản lý tài khoản, vai trò và hồ sơ độc giả</p>
                         </div>
                     </div>
+                    <div class="module-divider"></div>
+                    <div class="module-actions">
+                        <a href="/docGia" class="btn btn-outline-primary rounded-pill px-4">
+                            <i class="fas fa-list me-2"></i>Xem tất cả
+                        </a>
+                        <a href="/docGia/new" class="btn btn-primary rounded-pill px-4">
+                            <i class="fas fa-plus me-2"></i>Thêm mới
+                        </a>
+                    </div>
+                    <p class="module-note"><i class="fas fa-circle-info me-2"></i>Dùng để quản lý tài khoản, vai trò và thông tin liên hệ</p>
+                </article>
 
-                    <div class="border rounded-4 p-4 bg-white">
-                        <h6 class="fw-bold mb-3"><i class="fas fa-shield-halved me-2 text-success"></i>Quyền truy cập</h6>
-                        <p class="text-muted mb-2">Hệ thống đang phân quyền theo vai trò đăng nhập.</p>
-                        <ul class="mb-0 text-muted">
-                            <li>Admin: toàn quyền quản trị</li>
-                            <li>Giáo viên: quản lý dữ liệu nghiệp vụ</li>
-                            <li>Sinh viên: xem và thao tác trong phạm vi được cấp</li>
-                        </ul>
+                <article class="module-card module-amber">
+                    <div class="module-card-head">
+                        <div class="module-icon"><i class="fas fa-truck-fast"></i></div>
+                        <div class="module-copy">
+                            <h2>Tìm Kiếm / Nhập Dữ Liệu</h2>
+                            <p>Tra cứu tài liệu và ghi nhận nhập kho</p>
+                        </div>
+                    </div>
+                    <div class="module-divider"></div>
+                    <div class="module-actions">
+                        <a href="/nhapTaiLieu" class="btn btn-outline-warning rounded-pill px-4">
+                            <i class="fas fa-list me-2"></i>Xem tất cả
+                        </a>
+                        <a href="/nhapTaiLieu/new" class="btn btn-warning rounded-pill px-4 text-dark">
+                            <i class="fas fa-plus me-2"></i>Thêm mới
+                        </a>
+                    </div>
+                    <p class="module-note"><i class="fas fa-circle-info me-2"></i>Phục vụ tìm kiếm nhanh và ghi nhận dữ liệu đầu vào</p>
+                </article>
+
+                <article class="module-card module-red">
+                    <div class="module-card-head">
+                        <div class="module-icon"><i class="fas fa-book-open-reader"></i></div>
+                        <div class="module-copy">
+                            <h2>Mượn, Trả và Đặt Trước</h2>
+                            <p>Luân chuyển tài liệu giữa thư viện và bạn đọc</p>
+                        </div>
+                    </div>
+                    <div class="module-divider"></div>
+                    <div class="module-actions">
+                        <a href="/muonTra" class="btn btn-outline-danger rounded-pill px-4">
+                            <i class="fas fa-list me-2"></i>Xem tất cả
+                        </a>
+                        <a href="/muonTra/new" class="btn btn-danger rounded-pill px-4">
+                            <i class="fas fa-plus me-2"></i>Thêm mới
+                        </a>
+                    </div>
+                    <p class="module-note"><i class="fas fa-circle-info me-2"></i>Theo dõi mượn, trả và đặt trước tài liệu</p>
+                </article>
+            </section>
+
+            <section class="stat-grid mt-3" id="search-section">
+                <article class="module-card module-teal">
+                    <div class="module-card-head">
+                        <div class="module-icon"><i class="fas fa-magnifying-glass"></i></div>
+                        <div class="module-copy">
+                            <h2>Tìm Kiếm Và Tra Cứu</h2>
+                            <p>Tra cứu theo tên sách, tác giả, mã, nhà xuất bản và ngành học</p>
+                        </div>
+                    </div>
+                    <div class="module-divider"></div>
+                    <div class="module-actions">
+                        <a href="/taiLieu/search" class="btn btn-outline-success rounded-pill px-4"><i class="fas fa-magnifying-glass me-2"></i>Tra cứu</a>
+                        <a href="/taiLieu" class="btn btn-success rounded-pill px-4"><i class="fas fa-list me-2"></i>Xem tất cả</a>
+                    </div>
+                    <p class="module-note"><i class="fas fa-circle-info me-2"></i>Đây là phân hệ tìm kiếm/tra cứu gắn với dữ liệu tài liệu hiện có</p>
+                </article>
+
+                <article class="module-card module-blue" id="penalty-section">
+                    <div class="module-card-head">
+                        <div class="module-icon"><i class="fas fa-triangle-exclamation"></i></div>
+                        <div class="module-copy">
+                            <h2>Xử Phạt Và Phòng</h2>
+                            <p>Đặt phòng, ghi nhận vi phạm và in biên lai xử lý</p>
+                        </div>
+                    </div>
+                    <div class="module-divider"></div>
+                    <div class="module-actions">
+                        <a href="/phong" class="btn btn-outline-primary rounded-pill px-4"><i class="fas fa-list me-2"></i>Xem tất cả</a>
+                        <a href="/phong" class="btn btn-primary rounded-pill px-4"><i class="fas fa-plus me-2"></i>Thêm mới</a>
+                    </div>
+                    <p class="module-note"><i class="fas fa-circle-info me-2"></i>Giáo viên và sinh viên chỉ có phần đặt phòng</p>
+                </article>
+
+                <article class="module-card module-amber" id="notice-section">
+                    <div class="module-card-head">
+                        <div class="module-icon"><i class="fas fa-bell"></i></div>
+                        <div class="module-copy">
+                            <h2>Thông Báo / Báo Cáo</h2>
+                            <p>Thông báo cho người dùng và tổng hợp thống kê</p>
+                        </div>
+                    </div>
+                    <div class="module-divider"></div>
+                    <div class="module-actions">
+                        <a href="/thongBao" class="btn btn-outline-warning rounded-pill px-4"><i class="fas fa-list me-2"></i>Xem tất cả</a>
+                        <a href="/thongBao" class="btn btn-warning rounded-pill px-4 text-dark"><i class="fas fa-plus me-2"></i>Thêm mới</a>
+                    </div>
+                    <p class="module-note"><i class="fas fa-circle-info me-2"></i>Mẫu thông báo, báo cáo theo kỳ/năm học và xuất file</p>
+                </article>
+
+                <article class="module-card module-red" id="admin-section">
+                    <div class="module-card-head">
+                        <div class="module-icon"><i class="fas fa-screwdriver-wrench"></i></div>
+                        <div class="module-copy">
+                            <h2>Quản Trị Hệ Thống</h2>
+                            <p>Cấu hình, menu và điều phối toàn bộ hệ thống</p>
+                        </div>
+                    </div>
+                    <div class="module-divider"></div>
+                    <div class="module-actions">
+                        <a href="/dashboard" class="btn btn-outline-danger rounded-pill px-4"><i class="fas fa-list me-2"></i>Xem tất cả</a>
+                        <a href="/dashboard" class="btn btn-danger rounded-pill px-4"><i class="fas fa-plus me-2"></i>Thêm mới</a>
+                    </div>
+                    <p class="module-note"><i class="fas fa-circle-info me-2"></i>Trở về màn hình quản trị tổng hợp của toàn bộ ứng dụng</p>
+                </article>
+            </section>
+
+            <section class="usecase-panel" id="usecase-section">
+                <div class="usecase-head">
+                    <div>
+                        <h2>Bảng Chức Năng Trong Tài Liệu</h2>
+                        <p>Danh sách dưới đây bám theo đúng thứ tự trong ve-uc.docx.</p>
                     </div>
                 </div>
-            </div>
-        </div>
+                <div class="usecase-rail">
+                    <span class="usecase-pill pill-blue">Tài khoản và phân quyền</span>
+                    <span class="usecase-pill pill-teal">Tài liệu thư viện</span>
+                    <span class="usecase-pill pill-amber">Tìm kiếm và tra cứu tài liệu</span>
+                    <span class="usecase-pill pill-gold">Mượn, trả và đặt trước</span>
+                    <span class="usecase-pill pill-red">Xử phạt vi phạm và phòng</span>
+                    <span class="usecase-pill pill-blue">Thông báo, thống kê và báo cáo</span>
+                    <span class="usecase-pill pill-teal">Quản trị hệ thống</span>
+                </div>
+            </section>
+        </main>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>

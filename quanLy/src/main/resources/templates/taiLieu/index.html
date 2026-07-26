@@ -9,81 +9,64 @@
     <link href="/css/library-ui.css" rel="stylesheet">
 </head>
 <body>
-    <!-- CRUD Header -->
-    <section class="lib-hero text-center">
-        <div class="container position-relative">
-            <span class="eyebrow"><i class="fas fa-book"></i>Phân hệ tài liệu</span>
-            <h1 class="display-4 fw-bold mb-3">
-                <i class="fas fa-book-open me-3"></i>
-                Quản Lý Tài Liệu
-            </h1>
-            <p class="lead mb-0 text-white-50">Danh sách đầu sách, số lượng và ngày nhập được trình bày rõ ràng hơn.</p>
-        </div>
-    </section>
+    <div class="admin-shell">
+        <aside th:replace="~{fragments/sidebar :: librarySidebar('taiLieu')}"></aside>
 
-    <div class="container my-5">
-        <div class="lib-card lib-card-strong p-4 p-lg-5">
-            <div class="lib-toolbar mb-4">
+        <main class="admin-main">
+            <header class="catalog-topbar">
                 <div>
-                    <h2 class="h4 lib-section-title mb-1">Danh Sách Tài Liệu</h2>
-                    <p class="lib-muted mb-0">Quản lý dữ liệu tài liệu theo phong cách bảng điều khiển hiện đại.</p>
+                    <h1 class="catalog-page-title mb-1">Danh Sách Tài Liệu</h1>
+                    <p class="catalog-page-subtitle mb-0">Quản lý dữ liệu tài liệu theo phong cách bảng điều khiển hiện đại.</p>
                 </div>
-                <div class="d-flex flex-wrap gap-2">
-                    <a href="/" class="btn btn-outline-secondary">
-                        <i class="fas fa-house me-2"></i>Trang chủ
-                    </a>
-                    <a href="/taiLieu/new" class="btn btn-success">
-                        <i class="fas fa-plus me-2"></i>Thêm Tài Liệu Mới
-                    </a>
+                <div class="catalog-actions">
+                    <a href="/" class="btn btn-outline-secondary"><i class="fas fa-house me-2"></i>Trang chủ</a>
+                    <a href="/taiLieu/search" class="btn btn-outline-info"><i class="fas fa-magnifying-glass me-2"></i>Tra cứu</a>
+                    <a href="/taiLieu/new" class="btn btn-primary"><i class="fas fa-plus me-2"></i>Thêm mới</a>
                 </div>
-            </div>
+            </header>
 
-            <div class="lib-table-shell">
+            <section class="catalog-summary-row mb-3">
+                <div class="catalog-summary-card blue"><span class="label">Tổng tài liệu</span><span class="value" th:text="${#lists.size(hangHoaList)}">0</span></div>
+                <div class="catalog-summary-card green"><span class="label">Đang hiển thị</span><span class="value" th:text="${#lists.size(hangHoaList)}">0</span></div>
+                <div class="catalog-summary-card amber"><span class="label">Có thể nhập thêm</span><span class="value">+</span></div>
+            </section>
+
+            <section class="catalog-table-shell">
                 <div class="table-responsive">
-                    <table class="table table-hover">
+                    <table class="table align-middle mb-0">
                         <thead>
                             <tr>
-                                <th>ID</th>
+                                <th>Mã Tài Liệu</th>
                                 <th>Tên Tài Liệu</th>
-                                <th>Số Lượng</th>
-                                <th>Giá Nhập</th>
-                                <th>Ngày Tạo</th>
-                                <th class="text-center">CRUD Actions</th>
+                                <th>Tác Giả</th>
+                                <th>Nhà Xuất Bản</th>
+                                <th>Ngày Nhập</th>
+                                <th class="text-center">Chức Năng</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr th:each="hanghoa : ${hangHoaList}">
-                                <td th:text="${hanghoa.hanghoaID}">HH001</td>
+                                <td class="fw-semibold" th:text="${hanghoa.hanghoaID}">HH001</td>
                                 <td th:text="${hanghoa.tenHangHoa}">Laptop Dell</td>
-                                <td th:text="${hanghoa.soLuongHangHoa}">50</td>
-                                <td th:text="${#numbers.formatDecimal(hanghoa.giaNhap, 0, 'COMMA', 2, 'POINT')} + ' ₫'">15,000,000</td>
+                                <td th:text="${hanghoa.nhaSanXuat != null ? hanghoa.nhaSanXuat : 'Chưa cập nhật'}">Nguyễn Văn A</td>
+                                <td th:text="${hanghoa.nhaXuatBan != null ? hanghoa.nhaXuatBan : 'Chưa cập nhật'}">NXB Giáo dục</td>
                                 <td th:text="${hanghoa.ngayNhap != null ? #temporals.format(hanghoa.ngayNhap, 'dd/MM/yyyy') : 'N/A'}">01/01/2025</td>
-                                <td class="text-center action-buttons">
-                                    <a th:href="@{/taiLieu/{id}(id=${hanghoa.hanghoaID})}" class="btn btn-sm btn-outline-primary rounded-pill px-3">
-                                        <i class="fas fa-eye"></i> READ
-                                    </a>
-                                    <a th:href="@{/taiLieu/{id}/edit(id=${hanghoa.hanghoaID})}" class="btn btn-sm btn-outline-warning rounded-pill px-3">
-                                        <i class="fas fa-edit"></i> UPDATE
-                                    </a>
-                                    <button class="btn btn-sm btn-outline-danger delete-btn rounded-pill px-3" 
-                                            th:data-id="${hanghoa.hanghoaID}" 
-                                            th:data-name="${hanghoa.tenHangHoa}">
-                                        <i class="fas fa-trash"></i> DELETE
-                                    </button>
+                                <td>
+                                    <div class="catalog-action-group">
+                                        <a th:href="@{/taiLieu/{id}(id=${hanghoa.hanghoaID})}" class="catalog-action-btn edit" title="Xem chi tiết"><i class="fas fa-eye"></i></a>
+                                        <a th:href="@{/taiLieu/{id}/edit(id=${hanghoa.hanghoaID})}" class="catalog-action-btn edit" title="Sửa"><i class="fas fa-pen-to-square"></i></a>
+                                        <button class="catalog-action-btn delete delete-btn" th:data-id="${hanghoa.hanghoaID}" th:data-name="${hanghoa.tenHangHoa}" type="button" title="Xóa"><i class="fas fa-trash"></i></button>
+                                    </div>
                                 </td>
                             </tr>
-                            <!-- No data message -->
                             <tr th:if="${#lists.isEmpty(hangHoaList)}">
-                                <td colspan="6" class="text-center text-muted py-4">
-                                    <i class="fas fa-inbox fa-2x mb-2"></i>
-                                    <br>Chưa có tài liệu nào
-                                </td>
+                                <td colspan="6"><div class="catalog-empty-state"><i class="fas fa-inbox fa-2x mb-3"></i><div class="fw-bold mb-1">Chưa có tài liệu nào</div><div class="small">Hãy thêm tài liệu mới để bắt đầu.</div></div></td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-            </div>
-        </div>
+            </section>
+        </main>
     </div>
 
     <!-- Delete Confirmation Modal -->

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+<aside class="admin-sidebar" th:fragment="librarySidebar(activeMenu)">
+    <div class="brand-block">
+        <div class="brand-mark"><i class="fas fa-book-open"></i></div>
+        <div>
+            <div class="brand-title">QUẢN LÝ THƯ VIỆN</div>
+            <div class="brand-subtitle">Màn hình quản trị hệ thống</div>
+        </div>
+    </div>
+
+    <nav class="sidebar-nav">
+        <div class="sidebar-group-title">CHỨC NĂNG ỨNG DỤNG</div>
+        <a sec:authorize="hasRole('ADMIN')" class="sidebar-link" th:classappend="${activeMenu == 'docGia'} ? ' active' : ''" href="/docGia"><i class="fas fa-user-shield"></i><span>Tài khoản và phân quyền</span></a>
+        <a class="sidebar-link" th:classappend="${activeMenu == 'doi-mat-khau'} ? ' active' : ''" href="/doi-mat-khau"><i class="fas fa-key"></i><span>Đổi mật khẩu</span></a>
+        <a sec:authorize="hasRole('ADMIN')" class="sidebar-link" th:classappend="${activeMenu == 'taiLieu'} ? ' active' : ''" href="/taiLieu"><i class="fas fa-book-open"></i><span>Tài liệu thư viện</span></a>
+        <a class="sidebar-link" th:classappend="${activeMenu == 'taiLieu-search'} ? ' active' : ''" href="/taiLieu/search"><i class="fas fa-magnifying-glass"></i><span>Tìm kiếm và tra cứu</span></a>
+        <a class="sidebar-link" th:classappend="${activeMenu == 'muonTra'} ? ' active' : ''" href="/muonTra"><i class="fas fa-right-left"></i><span>Mượn, trả và đặt trước</span></a>
+        <a class="sidebar-link" th:classappend="${activeMenu == 'phong'} ? ' active' : ''" href="/phong"><i class="fas fa-triangle-exclamation"></i><span>Xử phạt và phòng</span></a>
+        <a class="sidebar-link" th:classappend="${activeMenu == 'thongBao'} ? ' active' : ''" href="/thongBao"><i class="fas fa-bell"></i><span>Thông báo, thống kê, báo cáo</span></a>
+        <a sec:authorize="hasRole('ADMIN')" class="sidebar-link" th:classappend="${activeMenu == 'dashboard'} ? ' active' : ''" href="/dashboard"><i class="fas fa-screwdriver-wrench"></i><span>Quản trị hệ thống</span></a>
+    </nav>
+
+    <div class="sidebar-collapse">
+        <button class="sidebar-collapse-btn" type="button" aria-label="Thu gọn menu"><i class="fas fa-chevron-left"></i></button>
+    </div>
+</aside>
+</body>
+</html>

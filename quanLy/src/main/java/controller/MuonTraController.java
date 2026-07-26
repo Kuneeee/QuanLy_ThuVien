@@ -1,6 +1,7 @@
 package controller;
 
 import entity.MuonTra;
+import entity.DocGia;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,11 +11,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import service.MuonTraService;
+import service.DocGiaService;
 
 import java.util.List;
 import java.time.LocalDateTime;
 import java.math.BigDecimal;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/muonTra")
@@ -22,17 +27,24 @@ public class MuonTraController {
     
     @Autowired
     private MuonTraService muonTraService;
+
+    @Autowired
+    private DocGiaService docGiaService;
     
     // Trang danh sách phiếu bán
     @GetMapping
     public String listBan(Model model) {
-        System.out.println("=== GET /muonTra START ===");
         List<MuonTra> banList = muonTraService.getAllBan();
-        System.out.println("Found " + banList.size() + " ban records");
         model.addAttribute("banList", banList);
-        model.addAttribute("newBan", new MuonTra());
-        System.out.println("Returning muonTra/index template");
-        System.out.println("=== GET /muonTra END ===");
+        model.addAttribute("canManageLoans", canManageLoans());
+        model.addAttribute("datTruocList", locTheoTrangThai(banList, "Đặt trước"));
+        model.addAttribute("muonList", locTheoTrangThai(banList, "Đang mượn"));
+        model.addAttribute("traSachList", locTheoTrangThai(banList, "Đã trả"));
+        model.addAttribute("lichSuList", banList);
+        model.addAttribute("datTruocForm", new MuonTra());
+        model.addAttribute("muonForm", new MuonTra());
+        model.addAttribute("traForm", new MuonTra());
+        model.addAttribute("giaHanSoNgay", 7);
         return "muonTra/index";
     }
     
@@ -46,12 +58,83 @@ public class MuonTraController {
         return "muonTra/new";
     }
     
-    // Trang tìm kiếm phiếu bán
+    // Trang tìm kiếm/lịch sử mượn
     @GetMapping("/search")
-    public String searchBan(Model model) {
+    public String searchBan(@RequestParam(value = "maTaiLieu", required = false) String maTaiLieu,
+                            Model model) {
         List<MuonTra> banList = muonTraService.getAllBan();
         model.addAttribute("banList", banList);
+        model.addAttribute("maTaiLieu", maTaiLieu);
+        if (maTaiLieu != null && !maTaiLieu.isBlank()) {
+            model.addAttribute("historyList", muonTraService.getAllBan().stream()
+                    .filter(item -> maTaiLieu.equalsIgnoreCase(item.getHangHoaID()))
+                    .toList());
+        } else {
+            model.addAttribute("historyList", banList);
+        }
         return "muonTra/search";
+    }
+
+    @PostMapping("/dat-truoc")
+    public String taoYeuCauDatTruoc(@ModelAttribute("datTruocForm") MuonTra form) {
+        try {
+            if (form.getNgayBan() == null) {
+                form.setNgayBan(LocalDateTime.now());
+            }
+            muonTraService.taoYeuCauDatTruoc(form);
+            return "redirect:/muonTra?success=dat-truoc";
+        } catch (Exception e) {
+            System.err.println("Error creating reservation: " + e.getMessage());
+            e.printStackTrace();
+            return "redirect:/muonTra?error=dat-truoc-failed";
+        }
+    }
+
+    @PostMapping("/lap-phieu-muon")
+    public String lapPhieuMuon(@ModelAttribute("muonForm") MuonTra form,
+                               @RequestParam(value = "kiemTraTaiKhoan", required = false) String kiemTraTaiKhoan) {
+        if (kiemTraTaiKhoan != null && !kiemTraTaiKhoan.isBlank()) {
+            boolean taiKhoanHopLe = docGiaService.getCustomerById(kiemTraTaiKhoan).isPresent();
+            boolean taiLieuHopLe = muonTraService.kiemTraTinhTrangTaiLieu(form.getHangHoaID());
+            if (!taiKhoanHopLe || !taiLieuHopLe) {
+                return "redirect:/muonTra?error=kiem-tra-that-bai";
+            }
+            DocGia docGia = docGiaService.getCustomerById(kiemTraTaiKhoan).orElse(null);
+            if (docGia != null && (form.getTenKhachHang() == null || form.getTenKhachHang().isBlank())) {
+                form.setTenKhachHang(docGia.getTenKhachHang());
+            }
+            form.setKhachHang(kiemTraTaiKhoan);
+        }
+        muonTraService.lapPhieuMuon(form);
+        return "redirect:/muonTra?success=lap-phieu-muon";
+    }
+
+    @PostMapping("/{id}/tra-sach")
+    public String ghiNhanTraSach(@PathVariable Long id,
+                                 @RequestParam(value = "ngayTra", required = false) String ngayTraStr) {
+        LocalDateTime ngayTra = null;
+        if (ngayTraStr != null && !ngayTraStr.isBlank()) {
+            ngayTra = LocalDateTime.parse(ngayTraStr);
+        }
+        muonTraService.ghiNhanTra(id, ngayTra);
+        return "redirect:/muonTra/" + id;
+    }
+
+    @PostMapping("/tra-sach")
+    public String ghiNhanTraSachNhanh(@RequestParam Long id,
+                                      @RequestParam(value = "ngayTra", required = false) String ngayTraStr) {
+        LocalDateTime ngayTra = null;
+        if (ngayTraStr != null && !ngayTraStr.isBlank()) {
+            ngayTra = LocalDateTime.parse(ngayTraStr);
+        }
+        muonTraService.ghiNhanTra(id, ngayTra);
+        return "redirect:/muonTra/" + id;
+    }
+
+    @PostMapping("/{id}/gia-han")
+    public String giaHanMuon(@PathVariable Long id, @RequestParam(value = "soNgayGiaHan", defaultValue = "7") int soNgayGiaHan) {
+        muonTraService.giaHanThoiGianMuon(id, soNgayGiaHan);
+        return "redirect:/muonTra/" + id;
     }
     
     // Xem chi tiết phiếu bán
@@ -60,7 +143,27 @@ public class MuonTraController {
         MuonTra ban = muonTraService.getBanById(id)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy phiếu bán"));
         model.addAttribute("ban", ban);
+        model.addAttribute("soNgayMuon", muonTraService.tinhSoNgayMuon(ban));
+        model.addAttribute("soNgayTre", muonTraService.tinhSoNgayTre(ban));
+        model.addAttribute("lichSuMuon", muonTraService.getAllBan().stream()
+            .filter(item -> item.getHangHoaID() != null && item.getHangHoaID().equalsIgnoreCase(ban.getHangHoaID()))
+            .toList());
         return "muonTra/detail";
+    }
+
+    private List<MuonTra> locTheoTrangThai(List<MuonTra> danhSach, String trangThai) {
+        return danhSach.stream()
+                .filter(item -> item.getTrangThai() != null && item.getTrangThai().equalsIgnoreCase(trangThai))
+                .collect(Collectors.toList());
+    }
+
+    private boolean canManageLoans() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || authentication.getAuthorities() == null) {
+            return false;
+        }
+        return authentication.getAuthorities().stream()
+                .anyMatch(authority -> "ROLE_ADMIN".equals(authority.getAuthority()));
     }
     
     // Tạo mới phiếu bán
@@ -95,6 +198,13 @@ public class MuonTraController {
             if (ban.getTongTien() == null && ban.getGiaBan() != null && ban.getSoLuongBan() != null) {
                 ban.setTongTien(ban.getGiaBan().multiply(BigDecimal.valueOf(ban.getSoLuongBan())));
                 System.out.println("Calculated tongTien: " + ban.getTongTien());
+            }
+
+            if (ban.getTrangThai() == null || ban.getTrangThai().isBlank()) {
+                ban.setTrangThai("Đang mượn");
+            }
+            if (ban.getNgayHenTra() == null && ban.getNgayBan() != null) {
+                ban.setNgayHenTra(ban.getNgayBan().plusDays(14));
             }
             
             // Debug gia nhap for CREATE

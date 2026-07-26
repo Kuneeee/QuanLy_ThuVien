@@ -5,6 +5,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.time.format.DateTimeFormatter;
 
 @Entity
@@ -33,6 +34,20 @@ public class MuonTra {
     @Column(name = "ngay_muon", nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime ngayBan;
+
+    @Column(name = "ngay_hen_tra")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+    private LocalDateTime ngayHenTra;
+
+    @Column(name = "ngay_tra")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+    private LocalDateTime ngayTra;
+
+    @Column(name = "trang_thai", length = 50)
+    private String trangThai;
+
+    @Column(name = "so_ngay_gia_han")
+    private Integer soNgayGiaHan;
     
     @Column(name = "ghi_chu", length = 500)
     private String ghiChu;
@@ -62,6 +77,7 @@ public class MuonTra {
         this.soLuongBan = soLuongBan;
         this.tongTien = giaBan.multiply(BigDecimal.valueOf(soLuongBan));
         this.ghiChu = "";
+        this.trangThai = "Đang mượn";
     }
 
     public MuonTra(String banCode, String hangHoaID, String tenHangHoa, String khachHang, LocalDateTime ngayBan, BigDecimal giaBan, Integer soLuongBan, String ghiChu) {
@@ -75,6 +91,7 @@ public class MuonTra {
         this.soLuongBan = soLuongBan;
         this.tongTien = giaBan.multiply(BigDecimal.valueOf(soLuongBan));
         this.ghiChu = ghiChu;
+        this.trangThai = "Đang mượn";
     }
 
     // Getters and Setters
@@ -104,6 +121,18 @@ public class MuonTra {
     
     public LocalDateTime getNgayBan() { return ngayBan; }
     public void setNgayBan(LocalDateTime ngayBan) { this.ngayBan = ngayBan; }
+
+    public LocalDateTime getNgayHenTra() { return ngayHenTra; }
+    public void setNgayHenTra(LocalDateTime ngayHenTra) { this.ngayHenTra = ngayHenTra; }
+
+    public LocalDateTime getNgayTra() { return ngayTra; }
+    public void setNgayTra(LocalDateTime ngayTra) { this.ngayTra = ngayTra; }
+
+    public String getTrangThai() { return trangThai; }
+    public void setTrangThai(String trangThai) { this.trangThai = trangThai; }
+
+    public Integer getSoNgayGiaHan() { return soNgayGiaHan; }
+    public void setSoNgayGiaHan(Integer soNgayGiaHan) { this.soNgayGiaHan = soNgayGiaHan; }
     
     public String getGhiChu() { return ghiChu; }
     public void setGhiChu(String ghiChu) { this.ghiChu = ghiChu; }
@@ -172,6 +201,22 @@ public class MuonTra {
     public String layThongTinBan() {
         return String.format("ID: %s | Hàng hóa: %s | Khách hàng: %s | Ngày: %s | Số lượng: %d | Giá: %.2f | Tổng tiên: %.2f",
                 this.banCode, this.tenHangHoa, this.khachHang, this.ngayBan, this.soLuongBan, this.giaBan.doubleValue(), this.tongTien.doubleValue());
+    }
+
+    public long tinhSoNgayMuon() {
+        if (ngayBan == null) {
+            return 0;
+        }
+        LocalDateTime mocKetThuc = ngayTra != null ? ngayTra : LocalDateTime.now();
+        return Math.max(ChronoUnit.DAYS.between(ngayBan.toLocalDate(), mocKetThuc.toLocalDate()), 0);
+    }
+
+    public long tinhSoNgayTre() {
+        if (ngayHenTra == null) {
+            return 0;
+        }
+        LocalDateTime mocKetThuc = ngayTra != null ? ngayTra : LocalDateTime.now();
+        return Math.max(ChronoUnit.DAYS.between(ngayHenTra.toLocalDate(), mocKetThuc.toLocalDate()), 0);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package entity;
 
 import javax.persistence.*;
+import org.springframework.format.annotation.DateTimeFormat;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -23,10 +24,14 @@ public class TaiLieu {
     
     @Column(name = "tac_gia", length = 200)
     private String nhaSanXuat;
+
+    @Column(name = "nha_xuat_ban", length = 200)
+    private String nhaXuatBan;
     
     @Column(name = "nam_xuat_ban")
     private Integer namSanXuat;
     
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     @Column(name = "ngay_nhap")
     private LocalDateTime ngayNhap;
     
@@ -35,6 +40,9 @@ public class TaiLieu {
     
     @Column(name = "the_loai", length = 100)
     private String loaiHangHoa;
+
+    @Column(name = "vi_tri", length = 100)
+    private String viTri;
 
     // Constructors
     public TaiLieu() {}
@@ -73,6 +81,9 @@ public class TaiLieu {
     
     public String getNhaSanXuat() { return nhaSanXuat; }
     public void setNhaSanXuat(String nhaSanXuat) { this.nhaSanXuat = nhaSanXuat; }
+
+    public String getNhaXuatBan() { return nhaXuatBan; }
+    public void setNhaXuatBan(String nhaXuatBan) { this.nhaXuatBan = nhaXuatBan; }
     
     public Integer getNamSanXuat() { return namSanXuat; }
     public void setNamSanXuat(Integer namSanXuat) { this.namSanXuat = namSanXuat; }
@@ -86,6 +97,9 @@ public class TaiLieu {
     public String getLoaiHangHoa() { return loaiHangHoa; }
     public void setLoaiHangHoa(String loaiHangHoa) { this.loaiHangHoa = loaiHangHoa; }
 
+    public String getViTri() { return viTri; }
+    public void setViTri(String viTri) { this.viTri = viTri; }
+
     // Business Logic Methods từ entity gốc
     
     /**
@@ -97,10 +111,12 @@ public class TaiLieu {
         System.out.println("Tên tài liệu: " + tenHangHoa);
         System.out.println("Số lượng: " + soLuongHangHoa);
         System.out.println("Nhà sản xuất: " + (nhaSanXuat != null ? nhaSanXuat : "Chưa cập nhật"));
+        System.out.println("Nhà xuất bản: " + (nhaXuatBan != null ? nhaXuatBan : "Chưa cập nhật"));
         System.out.println("Năm sản xuất: " + (namSanXuat > 0 ? namSanXuat : "Chưa cập nhật"));
         System.out.println("Ngày nhập: " + ngayNhap);
         System.out.println("Giá nhập: " + String.format("%.2f VND", giaNhap != null ? giaNhap.doubleValue() : 0.0));
         System.out.println("Loại tài liệu: " + loaiHangHoa);
+        System.out.println("Vị trí: " + (viTri != null ? viTri : "Chưa cập nhật"));
         System.out.println("=============================");
     }
 

@@ -27,6 +27,15 @@ public class DocGia {
     
     @Column(name = "loai_doc_gia", length = 50)
     private String loaiKhachHang;
+
+    @Column(name = "tai_khoan", length = 100)
+    private String taiKhoan;
+
+    @Column(name = "mat_khau", length = 255)
+    private String matKhau;
+
+    @Column(name = "quyen_han", length = 50)
+    private String quyenHan;
     
     @Column(name = "tong_tien_muon", precision = 15, scale = 2)
     private BigDecimal tongDaMua;
@@ -83,6 +92,15 @@ public class DocGia {
     
     public String getLoaiKhachHang() { return loaiKhachHang; }
     public void setLoaiKhachHang(String loaiKhachHang) { this.loaiKhachHang = loaiKhachHang; }
+
+    public String getTaiKhoan() { return taiKhoan; }
+    public void setTaiKhoan(String taiKhoan) { this.taiKhoan = taiKhoan; }
+
+    public String getMatKhau() { return matKhau; }
+    public void setMatKhau(String matKhau) { this.matKhau = matKhau; }
+
+    public String getQuyenHan() { return quyenHan; }
+    public void setQuyenHan(String quyenHan) { this.quyenHan = quyenHan; }
     
     public BigDecimal getTongDaMua() { return tongDaMua; }
     public void setTongDaMua(BigDecimal tongDaMua) { this.tongDaMua = tongDaMua; }

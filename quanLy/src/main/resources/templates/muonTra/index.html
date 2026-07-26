@@ -3,118 +3,319 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản Lý Mượn - Trả</title>
+    <title>Mượn, Trả Và Đặt Trước</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="/css/library-ui.css" rel="stylesheet">
 </head>
 <body>
-    <section class="lib-hero text-center">
-        <div class="container position-relative">
-            <span class="eyebrow"><i class="fas fa-right-left"></i>Phân hệ mượn - trả</span>
-            <h1 class="display-4 fw-bold mb-3">
-                <i class="fas fa-book-reader me-3"></i>
-                Quản Lý Mượn - Trả Tài Liệu
-            </h1>
-            <p class="lead mb-0 text-white-50">Theo dõi phiếu mượn, người mượn, số lượng và ghi chú trong một bảng nhìn rõ hơn.</p>
-        </div>
-    </section>
+    <div class="admin-shell">
+        <aside th:replace="~{fragments/sidebar :: librarySidebar('muonTra')}"></aside>
 
-    <div class="container my-5">
-        <div class="lib-card lib-card-strong p-4 p-lg-5">
-            <div class="lib-toolbar mb-4">
+        <main class="admin-main">
+            <header class="catalog-topbar">
                 <div>
-                    <h2 class="h4 lib-section-title mb-1">Danh Sách Phiếu Mượn - Trả</h2>
-                    <p class="lib-muted mb-0">Một giao diện gọn, rõ và nhất quán với các phân hệ còn lại.</p>
+                    <h1 class="catalog-page-title mb-1">Mượn, Trả Và Đặt Trước</h1>
+                    <p class="catalog-page-subtitle mb-0">Chọn một chức năng bên dưới để mở đúng khối nghiệp vụ và danh sách phiếu tương ứng.</p>
                 </div>
-                <div class="d-flex flex-wrap gap-2">
-                    <a href="/" class="btn btn-outline-secondary"><i class="fas fa-house me-2"></i>Trang chủ</a>
-                    <a href="/muonTra/new" class="btn btn-danger"><i class="fas fa-plus me-2"></i>Thêm Phiếu Mượn</a>
+                <div class="catalog-actions">
+                    <a href="/muonTra/search" class="btn btn-outline-info"><i class="fas fa-clock-rotate-left me-2"></i>Lịch sử mượn</a>
+                    <a th:if="${canManageLoans}" href="/muonTra/new" class="btn btn-outline-secondary"><i class="fas fa-pen-to-square me-2"></i>Phiếu cũ</a>
                 </div>
+            </header>
+
+            <div th:if="${param.success}" class="alert alert-success mb-3">
+                Tạo yêu cầu đặt trước thành công.
+            </div>
+            <div th:if="${param.error}" class="alert alert-danger mb-3">
+                Không thể tạo yêu cầu đặt trước. Vui lòng kiểm tra lại mã độc giả, mã tài liệu hoặc dữ liệu hệ thống.
             </div>
 
-            <div class="lib-table-shell">
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle">
-                        <thead>
-                            <tr>
-                                <th>Mã phiếu</th>
-                                <th>Tài liệu</th>
-                                <th>Độc giả</th>
-                                <th>Ngày mượn</th>
-                                <th>Số lượng</th>
-                                <th>Giá mượn</th>
-                                <th>Tổng tiền</th>
-                                <th>Ghi chú</th>
-                                <th class="text-center">Thao tác</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr th:each="ban : ${banList}">
-                                <td>
-                                    <div class="fw-bold" th:text="${ban.banCode}">PM001</div>
-                                    <div class="small text-muted" th:text="${'ID #'+ban.banId}">ID #1</div>
-                                </td>
-                                <td>
-                                    <div class="fw-bold" th:text="${ban.tenHangHoa}">Lập trình Java căn bản</div>
-                                    <div class="small text-muted" th:text="${ban.hangHoaID}">TL001</div>
-                                </td>
-                                <td>
-                                    <div class="fw-bold" th:text="${ban.tenKhachHang}">Nguyễn Văn An</div>
-                                    <div class="small text-muted" th:text="${ban.khachHang}">DG001</div>
-                                </td>
-                                <td th:text="${ban.ngayBan != null ? #temporals.format(ban.ngayBan, 'dd/MM/yyyy HH:mm') : 'Chưa cập nhật'}">01/01/2025 08:00</td>
-                                <td th:text="${ban.soLuongBan}">1</td>
-                                <td th:text="${ban.giaBan != null ? #numbers.formatDecimal(ban.giaBan, 0, 'COMMA', 0, 'POINT') + ' ₫' : '0 ₫'}">120,000 ₫</td>
-                                <td th:text="${ban.tongTien != null ? #numbers.formatDecimal(ban.tongTien, 0, 'COMMA', 0, 'POINT') + ' ₫' : '0 ₫'}">120,000 ₫</td>
-                                <td class="text-muted" th:text="${ban.ghiChu != null ? ban.ghiChu : '-'}">Mượn tham khảo</td>
-                                <td class="text-center">
-                                    <div class="d-inline-flex flex-wrap justify-content-center gap-2 action-buttons">
-                                        <a th:href="@{/muonTra/{id}(id=${ban.banId})}" class="btn btn-sm btn-outline-primary rounded-pill px-3">
-                                            <i class="fas fa-eye"></i> Xem
-                                        </a>
-                                        <a th:href="@{/muonTra/{id}/edit(id=${ban.banId})}" class="btn btn-sm btn-outline-warning rounded-pill px-3">
-                                            <i class="fas fa-pen-to-square"></i> Sửa
-                                        </a>
-                                        <button class="btn btn-sm btn-outline-danger rounded-pill px-3 delete-btn"
-                                                th:data-id="${ban.banId}"
-                                                th:data-name="${ban.banCode}">
-                                            <i class="fas fa-trash"></i> Xóa
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr th:if="${#lists.isEmpty(banList)}">
-                                <td colspan="9">
-                                    <div class="lib-empty-state">
-                                        <i class="fas fa-book-open fa-2x mb-3"></i>
-                                        <div class="fw-bold mb-1">Chưa có phiếu mượn nào</div>
-                                        <div class="small">Hệ thống sẽ hiển thị dữ liệu mẫu sau khi seeder chạy.</div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+            <section class="catalog-summary-row mb-3">
+                <div class="catalog-summary-card blue"><span class="label">Tổng phiếu</span><span class="value" th:text="${#lists.size(banList)}">0</span></div>
+                <div class="catalog-summary-card green"><span class="label">Đặt trước</span><span class="value" th:text="${#lists.size(datTruocList)}">0</span></div>
+                <div class="catalog-summary-card amber"><span class="label">Đang mượn</span><span class="value" th:text="${#lists.size(muonList)}">0</span></div>
+            </section>
+
+            <section class="row g-3 mb-4">
+                <div class="col-lg-3 col-md-6">
+                    <a class="btn btn-primary w-100 py-3" data-bs-toggle="collapse" href="#sectionDatTruoc" role="button" aria-expanded="false" aria-controls="sectionDatTruoc">
+                        <i class="fas fa-bookmark me-2"></i>Đặt trước tài liệu
+                    </a>
                 </div>
+                <div class="col-lg-3 col-md-6" th:if="${canManageLoans}">
+                    <a class="btn btn-danger w-100 py-3" data-bs-toggle="collapse" href="#sectionLapMuon" role="button" aria-expanded="false" aria-controls="sectionLapMuon">
+                        <i class="fas fa-file-circle-plus me-2"></i>Lập phiếu mượn
+                    </a>
+                </div>
+                <div class="col-lg-3 col-md-6" th:if="${canManageLoans}">
+                    <a class="btn btn-warning w-100 py-3 text-dark" data-bs-toggle="collapse" href="#sectionTraSach" role="button" aria-expanded="false" aria-controls="sectionTraSach">
+                        <i class="fas fa-rotate-left me-2"></i>Ghi nhận trả sách
+                    </a>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <a class="btn btn-info w-100 py-3 text-dark" data-bs-toggle="collapse" href="#sectionLichSu" role="button" aria-expanded="false" aria-controls="sectionLichSu">
+                        <i class="fas fa-clock-rotate-left me-2"></i>Kiểm tra lịch sử
+                    </a>
+                </div>
+            </section>
+
+            <div class="collapse" id="sectionDatTruoc">
+                <section class="row g-3 mb-4">
+                    <div class="col-lg-5">
+                        <div class="lib-form-shell h-100">
+                            <div class="lib-form-head">
+                                <h4 class="mb-1"><i class="fas fa-bookmark me-2"></i>Tạo yêu cầu đặt trước tài liệu</h4>
+                                <p class="mb-0 text-white-50">Tạo yêu cầu trước khi lập phiếu mượn chính thức.</p>
+                            </div>
+                            <div class="lib-form-body">
+                                <form method="post" action="/muonTra/dat-truoc">
+                                    <div class="row g-3">
+                                        <div class="col-md-6"><label class="form-label">Mã phiếu</label><input type="text" class="form-control" name="banCode" placeholder="DP001"></div>
+                                        <div class="col-md-6"><label class="form-label">Mã tài liệu</label><input type="text" class="form-control" name="hangHoaID" placeholder="TL001" required></div>
+                                        <div class="col-12"><label class="form-label">Tên tài liệu</label><input type="text" class="form-control" name="tenHangHoa" placeholder="Lập trình Java căn bản" required></div>
+                                        <div class="col-md-6"><label class="form-label">Độc giả</label><input type="text" class="form-control" name="tenKhachHang" placeholder="Nguyễn Văn An" required></div>
+                                        <div class="col-md-6"><label class="form-label">Mã độc giả</label><input type="text" class="form-control" name="khachHang" placeholder="DG001" required></div>
+                                        <div class="col-md-6"><label class="form-label">Số lượng</label><input type="number" class="form-control" name="soLuongBan" min="1" value="1"></div>
+                                        <div class="col-md-6"><label class="form-label">Ngày hẹn</label><input type="datetime-local" class="form-control" name="ngayHenTra"></div>
+                                        <div class="col-12"><label class="form-label">Ghi chú</label><input type="text" class="form-control" name="ghiChu" placeholder="Đặt trước theo nhu cầu lớp học"></div>
+                                    </div>
+                                    <div class="mt-3">
+                                        <button class="btn btn-primary w-100" type="submit"><i class="fas fa-bookmark me-2"></i>Tạo yêu cầu đặt trước</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="catalog-table-shell h-100">
+                            <div class="table-responsive">
+                                <table class="table align-middle mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Mã Phiếu</th>
+                                            <th>Tài Liệu</th>
+                                            <th>Độc Giả</th>
+                                            <th>Ngày Hẹn</th>
+                                            <th>Số Lượng</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="ban : ${datTruocList}">
+                                            <td th:text="${ban.banCode}">DP001</td>
+                                            <td>
+                                                <div class="fw-semibold" th:text="${ban.tenHangHoa}">Lập trình Java căn bản</div>
+                                                <div class="small text-muted" th:text="${ban.hangHoaID}">TL001</div>
+                                            </td>
+                                            <td th:text="${ban.tenKhachHang != null ? ban.tenKhachHang : ban.khachHang}">Nguyễn Văn An</td>
+                                            <td th:text="${ban.ngayHenTra != null ? #temporals.format(ban.ngayHenTra, 'dd/MM/yyyy HH:mm') : '-'}">15/01/2025 08:00</td>
+                                            <td th:text="${ban.soLuongBan}">1</td>
+                                        </tr>
+                                        <tr th:if="${#lists.isEmpty(datTruocList)}">
+                                            <td colspan="5"><div class="catalog-empty-state"><div class="fw-bold mb-1">Chưa có yêu cầu đặt trước</div><div class="small">Danh sách sẽ hiện ở đây sau khi tạo yêu cầu.</div></div></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
             </div>
-        </div>
+
+            <div class="collapse" id="sectionLapMuon" th:if="${canManageLoans}">
+                <section class="row g-3 mb-4">
+                    <div class="col-lg-5">
+                        <div class="lib-form-shell h-100">
+                            <div class="lib-form-head danger">
+                                <h4 class="mb-1"><i class="fas fa-file-circle-plus me-2"></i>Lập phiếu mượn</h4>
+                                <p class="mb-0 text-white-50">Kiểm tra tài khoản, kiểm tra tình trạng sách và gia hạn thời gian mượn mặc định.</p>
+                            </div>
+                            <div class="lib-form-body">
+                                <form method="post" action="/muonTra/lap-phieu-muon">
+                                    <div class="row g-3">
+                                        <div class="col-md-6"><label class="form-label">Mã độc giả cần kiểm tra</label><input type="text" class="form-control" name="kiemTraTaiKhoan" placeholder="DG001" required></div>
+                                        <div class="col-md-6"><label class="form-label">Mã phiếu</label><input type="text" class="form-control" name="banCode" placeholder="PM004"></div>
+                                        <div class="col-md-6"><label class="form-label">Mã tài liệu</label><input type="text" class="form-control" name="hangHoaID" placeholder="TL001" required></div>
+                                        <div class="col-md-6"><label class="form-label">Tên tài liệu</label><input type="text" class="form-control" name="tenHangHoa" placeholder="Lập trình Java căn bản" required></div>
+                                        <div class="col-md-6"><label class="form-label">Độc giả</label><input type="text" class="form-control" name="tenKhachHang" placeholder="Nguyễn Văn An"></div>
+                                        <div class="col-md-6"><label class="form-label">Ngày mượn</label><input type="datetime-local" class="form-control" name="ngayBan" required></div>
+                                        <div class="col-md-6"><label class="form-label">Ngày hẹn trả</label><input type="datetime-local" class="form-control" name="ngayHenTra"></div>
+                                        <div class="col-md-6"><label class="form-label">Số lượng mượn</label><input type="number" class="form-control" name="soLuongBan" min="1" value="1" required></div>
+                                        <div class="col-12"><label class="form-label">Ghi chú</label><input type="text" class="form-control" name="ghiChu" placeholder="Mượn tham khảo..."></div>
+                                    </div>
+                                    <div class="mt-3">
+                                        <button class="btn btn-danger w-100" type="submit"><i class="fas fa-save me-2"></i>Lập phiếu mượn</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="catalog-table-shell h-100">
+                            <div class="table-responsive">
+                                <table class="table align-middle mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Mã Phiếu</th>
+                                            <th>Tài Liệu</th>
+                                            <th>Độc Giả</th>
+                                            <th>Trạng Thái</th>
+                                            <th>Ngày Mượn</th>
+                                            <th>Hẹn Trả</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="ban : ${muonList}">
+                                            <td th:text="${ban.banCode}">PM001</td>
+                                            <td>
+                                                <div class="fw-semibold" th:text="${ban.tenHangHoa}">Lập trình Java căn bản</div>
+                                                <div class="small text-muted" th:text="${ban.hangHoaID}">TL001</div>
+                                            </td>
+                                            <td th:text="${ban.tenKhachHang != null ? ban.tenKhachHang : ban.khachHang}">Nguyễn Văn An</td>
+                                            <td><span class="badge rounded-pill bg-secondary" th:text="${ban.trangThai != null ? ban.trangThai : 'Đang mượn'}">Đang mượn</span></td>
+                                            <td th:text="${ban.ngayBan != null ? #temporals.format(ban.ngayBan, 'dd/MM/yyyy HH:mm') : '-'}">01/01/2025 08:00</td>
+                                            <td th:text="${ban.ngayHenTra != null ? #temporals.format(ban.ngayHenTra, 'dd/MM/yyyy HH:mm') : '-'}">15/01/2025 08:00</td>
+                                        </tr>
+                                        <tr th:if="${#lists.isEmpty(muonList)}">
+                                            <td colspan="6"><div class="catalog-empty-state"><div class="fw-bold mb-1">Chưa có phiếu mượn</div><div class="small">Phiếu mượn mới sẽ xuất hiện ở đây.</div></div></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <div class="collapse" id="sectionTraSach" th:if="${canManageLoans}">
+                <section class="row g-3 mb-4">
+                    <div class="col-lg-5">
+                        <div class="lib-form-shell h-100">
+                            <div class="lib-form-head warning">
+                                <h4 class="mb-1"><i class="fas fa-rotate-left me-2"></i>Ghi nhận trả sách</h4>
+                                <p class="mb-0 text-white-50">Cập nhật tình trạng sách và tính số ngày mượn khi trả.</p>
+                            </div>
+                            <div class="lib-form-body">
+                                <form method="post" action="/muonTra/tra-sach">
+                                    <div class="row g-3">
+                                        <div class="col-md-6"><label class="form-label">Mã phiếu</label><input type="text" class="form-control" name="id" inputmode="numeric" pattern="[0-9]*" placeholder="Nhập mã phiếu" required></div>
+                                        <div class="col-md-6"><label class="form-label">Ngày trả</label><input type="datetime-local" class="form-control" name="ngayTra"></div>
+                                        <div class="col-12"><label class="form-label">Lưu ý</label><input type="text" class="form-control" value="Hệ thống sẽ tự chuyển trạng thái sang Đã trả" readonly></div>
+                                    </div>
+                                    <div class="mt-3">
+                                        <button class="btn btn-warning w-100 text-dark" type="submit"><i class="fas fa-circle-check me-2"></i>Ghi nhận trả sách</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="catalog-table-shell h-100">
+                            <div class="table-responsive">
+                                <table class="table align-middle mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Mã Phiếu</th>
+                                            <th>Tài Liệu</th>
+                                            <th>Độc Giả</th>
+                                            <th>Ngày Trả</th>
+                                            <th>Trạng Thái</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="ban : ${traSachList}">
+                                            <td th:text="${ban.banCode}">PM001</td>
+                                            <td>
+                                                <div class="fw-semibold" th:text="${ban.tenHangHoa}">Lập trình Java căn bản</div>
+                                                <div class="small text-muted" th:text="${ban.hangHoaID}">TL001</div>
+                                            </td>
+                                            <td th:text="${ban.tenKhachHang != null ? ban.tenKhachHang : ban.khachHang}">Nguyễn Văn An</td>
+                                            <td th:text="${ban.ngayTra != null ? #temporals.format(ban.ngayTra, 'dd/MM/yyyy HH:mm') : '-'}">01/02/2025 08:00</td>
+                                            <td><span class="badge rounded-pill bg-success" th:text="${ban.trangThai != null ? ban.trangThai : 'Đã trả'}">Đã trả</span></td>
+                                        </tr>
+                                        <tr th:if="${#lists.isEmpty(traSachList)}">
+                                            <td colspan="5"><div class="catalog-empty-state"><div class="fw-bold mb-1">Chưa có phiếu trả</div><div class="small">Các phiếu đã trả sẽ được liệt kê ở đây.</div></div></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <div class="collapse" id="sectionLichSu">
+                <section class="catalog-table-shell mb-4">
+                    <div class="table-responsive p-3">
+                        <form method="get" action="/muonTra/search">
+                            <div class="row g-3 align-items-end">
+                                <div class="col-md-8">
+                                    <label class="form-label">Mã tài liệu</label>
+                                    <input type="text" class="form-control" name="maTaiLieu" placeholder="TL001">
+                                </div>
+                                <div class="col-md-4 d-flex gap-2">
+                                    <button class="btn btn-info flex-fill text-dark" type="submit"><i class="fas fa-search me-2"></i>Tra cứu lịch sử</button>
+                                    <a href="/muonTra/search" class="btn btn-outline-secondary flex-fill"><i class="fas fa-list me-2"></i>Xem tất cả</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+                <section class="catalog-table-shell">
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Mã Phiếu</th>
+                                    <th>Tài Liệu</th>
+                                    <th>Độc Giả</th>
+                                    <th>Ngày Mượn</th>
+                                    <th>Hẹn Trả</th>
+                                    <th>Ngày Trả</th>
+                                    <th>Trạng Thái</th>
+                                    <th class="text-center">Chức Năng</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="ban : ${lichSuList}">
+                                    <td th:text="${ban.banCode}">PM001</td>
+                                    <td>
+                                        <div class="fw-semibold" th:text="${ban.tenHangHoa}">Lập trình Java căn bản</div>
+                                        <div class="small text-muted" th:text="${ban.hangHoaID}">TL001</div>
+                                    </td>
+                                    <td th:text="${ban.tenKhachHang != null ? ban.tenKhachHang : ban.khachHang}">Nguyễn Văn An</td>
+                                    <td th:text="${ban.ngayBan != null ? #temporals.format(ban.ngayBan, 'dd/MM/yyyy HH:mm') : '-'}">01/01/2025 08:00</td>
+                                    <td th:text="${ban.ngayHenTra != null ? #temporals.format(ban.ngayHenTra, 'dd/MM/yyyy HH:mm') : '-'}">15/01/2025 08:00</td>
+                                    <td th:text="${ban.ngayTra != null ? #temporals.format(ban.ngayTra, 'dd/MM/yyyy HH:mm') : '-'}">-</td>
+                                    <td><span class="badge rounded-pill bg-secondary" th:text="${ban.trangThai != null ? ban.trangThai : 'Đang mượn'}">Đang mượn</span></td>
+                                    <td>
+                                        <div class="catalog-action-group justify-content-center">
+                                            <a th:href="@{/muonTra/{id}(id=${ban.banId})}" class="catalog-action-btn edit" title="Xem chi tiết"><i class="fas fa-eye"></i></a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr th:if="${#lists.isEmpty(lichSuList)}">
+                                    <td colspan="8"><div class="catalog-empty-state"><div class="fw-bold mb-1">Chưa có dữ liệu lịch sử mượn</div><div class="small">Danh sách đầy đủ sẽ hiển thị tại đây.</div></div></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </main>
     </div>
 
     <div class="modal fade" id="deleteModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header bg-danger text-white">
-                    <h5 class="modal-title">
-                        <i class="fas fa-trash me-2"></i>Xác nhận xóa
-                    </h5>
+                    <h5 class="modal-title"><i class="fas fa-trash me-2"></i>Xác nhận xóa</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <p class="mb-1">Bạn có chắc muốn xóa phiếu mượn:</p>
+                    <p class="mb-1">Bạn có chắc muốn xóa phiếu:</p>
                     <strong id="deleteItemName"></strong>
-                    <p class="text-danger mt-3 mb-0">
-                        <i class="fas fa-triangle-exclamation me-1"></i>Hành động này không thể hoàn tác.
-                    </p>
+                    <p class="text-danger mt-3 mb-0"><i class="fas fa-triangle-exclamation me-1"></i>Hành động này không thể hoàn tác.</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>

@@ -20,6 +20,9 @@ public interface MuonTraRepository extends JpaRepository<MuonTra, Long> {
     
    @Query("SELECT b FROM MuonTra b WHERE b.hangHoaID = :hanghoaID")
        List<MuonTra> findByHanghoaID(@Param("hanghoaID") String hanghoaID);
+
+   @Query("SELECT b FROM MuonTra b WHERE b.hangHoaID = :hanghoaID ORDER BY b.ngayBan DESC")
+       List<MuonTra> findByHanghoaIDOrderByNgayBanDesc(@Param("hanghoaID") String hanghoaID);
     
    @Query("SELECT b FROM MuonTra b WHERE LOWER(b.tenKhachHang) = LOWER(:tenKhachHang)")
        List<MuonTra> findByTenKhachHang(@Param("tenKhachHang") String tenKhachHang);

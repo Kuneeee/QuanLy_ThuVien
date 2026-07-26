@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,72 +9,92 @@
     <link href="/css/library-ui.css" rel="stylesheet">
 </head>
 <body>
-    <section class="lib-hero">
-        <div class="container position-relative">
-            <span class="eyebrow"><i class="fas fa-eye"></i>Xem tài liệu</span>
-            <h1 class="display-5 fw-bold mb-3">Chi Tiết Tài Liệu</h1>
-            <p class="lead mb-0 text-white-50">Thông tin đầu sách, số lượng và giá trị kho.</p>
-        </div>
-    </section>
+    <div class="admin-shell">
+        <aside th:replace="~{fragments/sidebar :: librarySidebar('taiLieu')}"></aside>
 
-    <div class="container my-5">
-        <div class="lib-detail-panel">
-            <div class="detail-head d-flex flex-wrap align-items-center justify-content-between gap-3">
+        <main class="admin-main">
+            <header class="catalog-topbar">
                 <div>
-                    <h4 class="mb-1"><i class="fas fa-book-open me-2"></i><span th:text="${hangHoa.tenHangHoa}">Lập trình Java căn bản</span></h4>
-                    <p class="mb-0 text-white-50">Mã tài liệu <span th:text="${hangHoa.hanghoaID}">TL001</span></p>
+                    <h1 class="catalog-page-title mb-1">Chi Tiết Tài Liệu</h1>
+                    <p class="catalog-page-subtitle mb-0">Xem số lượng, vị trí và lịch sử mượn của tài liệu.</p>
                 </div>
-                <div class="d-flex flex-wrap gap-2">
-                    <a th:href="@{/taiLieu/{id}/edit(id=${hangHoa.hanghoaID})}" class="btn btn-light rounded-pill px-3"><i class="fas fa-pen-to-square me-2"></i>Sửa</a>
-                    <a href="/taiLieu" class="btn btn-outline-light rounded-pill px-3"><i class="fas fa-list me-2"></i>Danh sách</a>
+                <div class="catalog-actions">
+                    <a sec:authorize="hasRole('ADMIN')" th:href="@{/taiLieu/{id}/edit(id=${hangHoa.hanghoaID})}" class="btn btn-primary"><i class="fas fa-pen-to-square me-2"></i>Chỉnh sửa</a>
+                    <a sec:authorize="hasRole('ADMIN')" href="/taiLieu" class="btn btn-outline-secondary"><i class="fas fa-list me-2"></i>Danh sách</a>
+                    <a href="/taiLieu/search" class="btn btn-outline-info"><i class="fas fa-magnifying-glass me-2"></i>Tra cứu</a>
                 </div>
-            </div>
+            </header>
 
-            <div class="detail-body">
-                <div class="lib-meta-grid mb-4">
-                    <div class="lib-meta-card">
-                        <span class="label">Loại tài liệu</span>
-                        <div class="value" th:text="${hangHoa.loaiHangHoa ?: 'Chưa cập nhật'}">Công nghệ thông tin</div>
-                    </div>
-                    <div class="lib-meta-card">
-                        <span class="label">Số lượng</span>
-                        <div class="value" th:text="${hangHoa.soLuongHangHoa}">18</div>
-                    </div>
-                    <div class="lib-meta-card">
-                        <span class="label">Giá nhập</span>
-                        <div class="value text-success" th:text="${hangHoa.giaNhap != null ? #numbers.formatDecimal(hangHoa.giaNhap, 0, 'COMMA', 0, 'POINT') + ' ₫' : '0 ₫'}">120,000 ₫</div>
-                    </div>
-                    <div class="lib-meta-card">
-                        <span class="label">Năm xuất bản</span>
-                        <div class="value" th:text="${hangHoa.namSanXuat ?: 'Chưa cập nhật'}">2024</div>
+            <section class="lib-detail-panel">
+                <div class="detail-head d-flex flex-wrap align-items-center justify-content-between gap-3">
+                    <div>
+                        <h4 class="mb-1"><i class="fas fa-book-open me-2"></i><span th:text="${hangHoa.tenHangHoa}">Lập trình Java căn bản</span></h4>
+                        <p class="mb-0 text-white-50">Mã tài liệu <span th:text="${hangHoa.hanghoaID}">TL001</span></p>
                     </div>
                 </div>
 
-                <div class="row g-3">
-                    <div class="col-lg-6">
-                        <div class="border rounded-4 p-4 h-100 bg-light bg-opacity-50">
-                            <h6 class="fw-bold mb-3"><i class="fas fa-id-card me-2 text-primary"></i>Thông tin cơ bản</h6>
-                            <div class="mb-2"><span class="text-muted">Mã tài liệu:</span> <strong th:text="${hangHoa.hanghoaID}">TL001</strong></div>
-                            <div class="mb-2"><span class="text-muted">Tên tài liệu:</span> <strong th:text="${hangHoa.tenHangHoa}">Lập trình Java căn bản</strong></div>
-                            <div><span class="text-muted">Nhà sản xuất / tác giả:</span> <strong th:text="${hangHoa.nhaSanXuat ?: 'Chưa cập nhật'}">Nguyễn Văn A</strong></div>
+                <div class="detail-body">
+                    <div class="lib-meta-grid">
+                        <div class="lib-meta-card">
+                            <span class="label">Mã tài liệu</span>
+                            <div class="value" th:text="${hangHoa.hanghoaID}">TL001</div>
+                        </div>
+                        <div class="lib-meta-card">
+                            <span class="label">Tác giả</span>
+                            <div class="value" th:text="${hangHoa.nhaSanXuat ?: 'Chưa cập nhật'}">Nguyễn Văn A</div>
+                        </div>
+                        <div class="lib-meta-card">
+                            <span class="label">Nhà xuất bản</span>
+                            <div class="value" th:text="${hangHoa.nhaXuatBan ?: 'Chưa cập nhật'}">NXB Giáo dục</div>
+                        </div>
+                        <div class="lib-meta-card">
+                            <span class="label">Ngày nhập</span>
+                            <div class="value" th:text="${hangHoa.ngayNhap != null ? #temporals.format(hangHoa.ngayNhap, 'dd/MM/yyyy HH:mm') : 'Chưa cập nhật'}">25/07/2026 08:00</div>
+                        </div>
+                        <div class="lib-meta-card">
+                            <span class="label">Số lượng</span>
+                            <div class="value" th:text="${hangHoa.soLuongHangHoa != null ? hangHoa.soLuongHangHoa : 0}">0</div>
+                        </div>
+                        <div class="lib-meta-card">
+                            <span class="label">Vị trí</span>
+                            <div class="value" th:text="${hangHoa.viTri ?: 'Chưa cập nhật'}">Kệ trung tâm</div>
                         </div>
                     </div>
-                    <div class="col-lg-6">
-                        <div class="border rounded-4 p-4 h-100 bg-light bg-opacity-50">
-                            <h6 class="fw-bold mb-3"><i class="fas fa-chart-pie me-2 text-success"></i>Trạng thái kho</h6>
-                            <div class="mb-2"><span class="text-muted">Tổng giá trị:</span> <strong th:text="${hangHoa.giaNhap != null and hangHoa.soLuongHangHoa != null ? #numbers.formatDecimal(hangHoa.giaNhap.multiply(T(java.math.BigDecimal).valueOf(hangHoa.soLuongHangHoa)), 0, 'COMMA', 0, 'POINT') + ' ₫' : '0 ₫'}">2,160,000 ₫</strong></div>
-                            <div class="mb-2"><span class="text-muted">Tình trạng:</span>
-                                <strong>
-                                    <span th:if="${hangHoa.soLuongHangHoa != null and hangHoa.soLuongHangHoa < 10}" class="text-danger">Sắp hết</span>
-                                    <span th:unless="${hangHoa.soLuongHangHoa != null and hangHoa.soLuongHangHoa < 10}" class="text-success">Còn sẵn</span>
-                                </strong>
-                            </div>
-                            <div class="text-muted small">Bản ghi này đã được nạp trong dữ liệu mẫu của hệ thống.</div>
+
+                    <div class="mt-4">
+                        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+                            <h5 class="mb-0"><i class="fas fa-clock-rotate-left me-2"></i>Lịch sử mượn</h5>
+                            <span class="badge bg-light text-dark" th:text="${#lists.size(lichSuMuon)}">0</span>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-dark table-hover align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Mã phiếu</th>
+                                        <th>Người mượn</th>
+                                        <th>Ngày mượn</th>
+                                        <th>Số lượng</th>
+                                        <th>Ghi chú</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="muon : ${lichSuMuon}">
+                                        <td th:text="${muon.banCode}">PM001</td>
+                                        <td th:text="${muon.tenKhachHang != null ? muon.tenKhachHang : muon.khachHang}">Nguyễn Văn An</td>
+                                        <td th:text="${muon.ngayBan != null ? #temporals.format(muon.ngayBan, 'dd/MM/yyyy HH:mm') : 'N/A'}">01/01/2026 10:00</td>
+                                        <td th:text="${muon.soLuongBan}">1</td>
+                                        <td th:text="${muon.ghiChu != null ? muon.ghiChu : 'Không có'}">Mượn tham khảo</td>
+                                    </tr>
+                                    <tr th:if="${#lists.isEmpty(lichSuMuon)}">
+                                        <td colspan="5" class="text-center text-white-50 py-4">Chưa có lịch sử mượn cho tài liệu này.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </section>
+        </main>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

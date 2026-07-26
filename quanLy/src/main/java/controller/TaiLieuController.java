@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.view.RedirectView;
+import repository.MuonTraRepository;
+import repository.TaiLieuRepository;
 import service.TaiLieuService;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @Controller
@@ -22,21 +22,38 @@ public class TaiLieuController {
     
     @Autowired
     private TaiLieuService taiLieuService;
+
+    @Autowired
+    private TaiLieuRepository taiLieuRepository;
+
+    @Autowired
+    private MuonTraRepository muonTraRepository;
     
     // Trang danh sách hàng hóa
     @GetMapping
     public String listTaiLieu(Model model) {
         List<TaiLieu> hangHoaList = taiLieuService.getAllHangHoa();
-        System.out.println("=== HANGHOA CONTROLLER DEBUG ===");
-        System.out.println("Total HangHoa found: " + hangHoaList.size());
-        for (int i = 0; i < hangHoaList.size(); i++) {
-            TaiLieu hh = hangHoaList.get(i);
-            System.out.println((i+1) + ". " + hh.getHanghoaID() + " - " + hh.getTenHangHoa());
-        }
-        System.out.println("===============================");
         model.addAttribute("hangHoaList", hangHoaList);
         model.addAttribute("newHangHoa", new TaiLieu());
         return "taiLieu/index";
+    }
+
+    @GetMapping("/search")
+    public String searchTaiLieu(@RequestParam(required = false) String tenSach,
+                                @RequestParam(required = false) String tacGia,
+                                @RequestParam(required = false) String maTaiLieu,
+                                @RequestParam(required = false) String nhaXuatBan,
+                                @RequestParam(required = false) String nganhHoc,
+                                Model model) {
+        List<TaiLieu> searchResults = taiLieuRepository.searchTaiLieu(tenSach, tacGia, maTaiLieu, nhaXuatBan, nganhHoc);
+        model.addAttribute("searchResults", searchResults);
+        model.addAttribute("currentTenSach", tenSach);
+        model.addAttribute("currentTacGia", tacGia);
+        model.addAttribute("currentMaTaiLieu", maTaiLieu);
+        model.addAttribute("currentNhaXuatBan", nhaXuatBan);
+        model.addAttribute("currentNganhHoc", nganhHoc);
+        model.addAttribute("nganhHocOptions", taiLieuRepository.findAllLoaiHangHoa());
+        return "taiLieu/search";
     }
     
     // Trang thêm mới hàng hóa
@@ -52,27 +69,22 @@ public class TaiLieuController {
         TaiLieu hangHoa = taiLieuService.getHangHoaById(id)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy hàng hóa"));
         model.addAttribute("hangHoa", hangHoa);
+        model.addAttribute("lichSuMuon", muonTraRepository.findByHanghoaIDOrderByNgayBanDesc(id));
         return "taiLieu/detail";
     }
     
     // Tạo mới hàng hóa
     @PostMapping
-    public RedirectView createTaiLieu(@ModelAttribute TaiLieu hangHoa) {
+    public String createTaiLieu(@ModelAttribute TaiLieu hangHoa, Model model) {
         try {
-            System.out.println("Creating HangHoa: " + hangHoa.toString());
             taiLieuService.createHangHoa(hangHoa);
-            System.out.println("TaiLieu created successfully, redirecting to /taiLieu");
-            RedirectView redirectView = new RedirectView();
-            redirectView.setUrl("/taiLieu");
-            redirectView.setContextRelative(true);
-            return redirectView;
+            return "redirect:/taiLieu";
         } catch (Exception e) {
             System.err.println("Error creating HangHoa: " + e.getMessage());
             e.printStackTrace();
-            RedirectView redirectView = new RedirectView();
-            redirectView.setUrl("/taiLieu/new?error=true");
-            redirectView.setContextRelative(true);
-            return redirectView;
+            model.addAttribute("hangHoa", hangHoa);
+            model.addAttribute("error", "Không thể lưu tài liệu. Kiểm tra lại dữ liệu hoặc trạng thái cơ sở dữ liệu trên run-neon.");
+            return "taiLieu/new";
         }
     }
     
@@ -87,58 +99,37 @@ public class TaiLieuController {
     
     // Cập nhật hàng hóa
     @PostMapping("/{id}")
-    public RedirectView updateTaiLieu(@PathVariable String id, @ModelAttribute TaiLieu hangHoa) {
+    public String updateTaiLieu(@PathVariable String id, @ModelAttribute TaiLieu hangHoa, Model model) {
         try {
-            System.out.println("=== UPDATING HANGHOA ===");
-            System.out.println("ID: " + id);
-            System.out.println("Data received: " + hangHoa.toString());
-            
             TaiLieu updated = taiLieuService.updateHangHoa(id, hangHoa);
             if (updated != null) {
-                System.out.println("HangHoa updated successfully: " + updated.toString());
-            } else {
-                System.out.println("ERROR: HangHoa update failed - not found");
+                return "redirect:/taiLieu";
             }
-            
-            RedirectView redirectView = new RedirectView();
-            redirectView.setUrl("/taiLieu");
-            redirectView.setContextRelative(true);
-            return redirectView;
+            model.addAttribute("hangHoa", hangHoa);
+            model.addAttribute("error", "Không thể cập nhật tài liệu vì bản ghi không tồn tại.");
+            return "taiLieu/edit";
         } catch (Exception e) {
             System.err.println("Error updating HangHoa: " + e.getMessage());
             e.printStackTrace();
-            RedirectView redirectView = new RedirectView();
-            redirectView.setUrl("/taiLieu/" + id + "/edit?error=true");
-            redirectView.setContextRelative(true);
-            return redirectView;
+            model.addAttribute("hangHoa", hangHoa);
+            model.addAttribute("error", "Không thể cập nhật tài liệu. Kiểm tra lại dữ liệu hoặc trạng thái cơ sở dữ liệu trên run-neon.");
+            return "taiLieu/edit";
         }
     }
     
     // Xóa hàng hóa
     @PostMapping("/{id}/delete")
-    public RedirectView deleteHangHoa(@PathVariable String id) {
+    public String deleteHangHoa(@PathVariable String id) {
         try {
-            System.out.println("=== DELETING HANGHOA ===");
-            System.out.println("ID to delete: " + id);
-            
             boolean deleted = taiLieuService.deleteHangHoa(id);
             if (deleted) {
-                System.out.println("HangHoa deleted successfully: " + id);
-            } else {
-                System.out.println("ERROR: HangHoa delete failed - not found: " + id);
+                return "redirect:/taiLieu";
             }
-            
-            RedirectView redirectView = new RedirectView();
-            redirectView.setUrl("/taiLieu");
-            redirectView.setContextRelative(true);
-            return redirectView;
+            return "redirect:/taiLieu?error=true";
         } catch (Exception e) {
             System.err.println("Error deleting HangHoa: " + e.getMessage());
             e.printStackTrace();
-            RedirectView redirectView = new RedirectView();
-            redirectView.setUrl("/taiLieu?error=true");
-            redirectView.setContextRelative(true);
-            return redirectView;
+            return "redirect:/taiLieu?error=true";
         }
     }
 }

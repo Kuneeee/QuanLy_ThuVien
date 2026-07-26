@@ -54,21 +54,16 @@ public class DocGiaController {
     
     // Tạo mới khách hàng
     @PostMapping
-    public String createDocGia(@ModelAttribute DocGia khachHang) {
-        System.out.println("=== POST /docGia START ===");
-        System.out.println("Received customer: " + khachHang.getTenKhachHang());
-        
+    public String createDocGia(@ModelAttribute DocGia khachHang, Model model) {
         try {
             DocGia created = docGiaService.createCustomer(khachHang);
-            System.out.println("Customer created with ID: " + created.getKhachHangId());
-            System.out.println("Redirecting to /docGia");
             return "redirect:/docGia";
         } catch (Exception e) {
             System.out.println("ERROR creating customer: " + e.getMessage());
             e.printStackTrace();
-            return "error/500";
-        } finally {
-            System.out.println("=== POST /docGia END ===");
+            model.addAttribute("khachHang", khachHang);
+            model.addAttribute("error", "Không thể lưu độc giả. Kiểm tra lại dữ liệu hoặc trạng thái cơ sở dữ liệu trên run-neon.");
+            return "docGia/new";
         }
     }
     
@@ -83,9 +78,20 @@ public class DocGiaController {
     
     // Cập nhật khách hàng
     @PostMapping("/{id}")
-    public String updateDocGia(@PathVariable String id, @ModelAttribute DocGia khachHang) {
-        docGiaService.updateCustomer(id, khachHang);
-        return "redirect:/docGia";
+    public String updateDocGia(@PathVariable String id, @ModelAttribute DocGia khachHang, Model model) {
+        try {
+            DocGia updated = docGiaService.updateCustomer(id, khachHang);
+            if (updated != null) {
+                return "redirect:/docGia";
+            }
+            model.addAttribute("khachHang", khachHang);
+            model.addAttribute("error", "Không thể cập nhật độc giả vì bản ghi không tồn tại.");
+            return "docGia/edit";
+        } catch (Exception e) {
+            model.addAttribute("khachHang", khachHang);
+            model.addAttribute("error", "Không thể cập nhật độc giả. Kiểm tra lại dữ liệu hoặc trạng thái cơ sở dữ liệu trên run-neon.");
+            return "docGia/edit";
+        }
     }
     
     // Xóa khách hàng

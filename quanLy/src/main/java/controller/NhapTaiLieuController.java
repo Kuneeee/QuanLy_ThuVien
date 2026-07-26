@@ -55,9 +55,15 @@ public class NhapTaiLieuController {
     
     // Tạo mới phiếu nhập
     @PostMapping
-    public String createNhapTaiLieu(@ModelAttribute NhapTaiLieu nhap) {
-        nhapTaiLieuService.createNhap(nhap);
-        return "redirect:/nhapTaiLieu";
+    public String createNhapTaiLieu(@ModelAttribute NhapTaiLieu nhap, Model model) {
+        try {
+            nhapTaiLieuService.createNhap(nhap);
+            return "redirect:/nhapTaiLieu";
+        } catch (Exception e) {
+            model.addAttribute("nhap", nhap);
+            model.addAttribute("error", "Không thể lưu phiếu nhập. Kiểm tra lại dữ liệu hoặc trạng thái cơ sở dữ liệu trên run-neon.");
+            return "nhapTaiLieu/new";
+        }
     }
     
     // Trang chỉnh sửa phiếu nhập
@@ -71,9 +77,20 @@ public class NhapTaiLieuController {
     
     // Cập nhật phiếu nhập
     @PostMapping("/{id}")
-    public String updateNhapTaiLieu(@PathVariable Long id, @ModelAttribute NhapTaiLieu nhap) {
-        nhapTaiLieuService.updateNhap(id, nhap);
-        return "redirect:/nhapTaiLieu";
+    public String updateNhapTaiLieu(@PathVariable Long id, @ModelAttribute NhapTaiLieu nhap, Model model) {
+        try {
+            NhapTaiLieu updated = nhapTaiLieuService.updateNhap(id, nhap);
+            if (updated != null) {
+                return "redirect:/nhapTaiLieu";
+            }
+            model.addAttribute("nhap", nhap);
+            model.addAttribute("error", "Không thể cập nhật phiếu nhập vì bản ghi không tồn tại.");
+            return "nhapTaiLieu/edit";
+        } catch (Exception e) {
+            model.addAttribute("nhap", nhap);
+            model.addAttribute("error", "Không thể cập nhật phiếu nhập. Kiểm tra lại dữ liệu hoặc trạng thái cơ sở dữ liệu trên run-neon.");
+            return "nhapTaiLieu/edit";
+        }
     }
     
     // Xóa phiếu nhập

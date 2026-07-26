@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông Báo, Thống Kê Và Báo Cáo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="/css/library-ui.css" rel="stylesheet">
+</head>
+<body>
+<div class="admin-shell">
+    <aside th:replace="~{fragments/sidebar :: librarySidebar('thongBao')}"></aside>
+
+    <main class="admin-main">
+        <header class="catalog-topbar">
+            <div>
+                <h1 class="catalog-page-title mb-1">Thông Báo, Thống Kê Và Báo Cáo</h1>
+                <p class="catalog-page-subtitle mb-0">Tạo mẫu thông báo, xem thống kê theo kỳ/năm học và xuất báo cáo ngay từ một màn hình.</p>
+            </div>
+            <div class="catalog-actions">
+                <a th:if="${canManage}" href="#notification-section" class="btn btn-outline-primary"><i class="fas fa-bell me-2"></i>Gửi thông báo</a>
+                <a th:if="${canManage}" href="#report-section" class="btn btn-outline-success"><i class="fas fa-chart-column me-2"></i>Báo cáo</a>
+                <a th:if="${canManage}" th:href="@{/thongBao/xuat-bao-cao(ky=${ky},namHoc=${namHoc})}" class="btn btn-warning text-dark"><i class="fas fa-file-export me-2"></i>Xuất báo cáo</a>
+            </div>
+        </header>
+
+        <div th:if="${param.success}" class="alert alert-success mb-3">Thao tác đã được lưu thành công.</div>
+        <div th:if="${error}" class="alert alert-danger mb-3" th:text="${error}">Có lỗi xảy ra.</div>
+
+        <section class="row g-3 mb-3">
+            <div class="col-lg-3 col-md-6"><div class="catalog-summary-card blue h-100"><span class="label">Tổng mẫu</span><span class="value" th:text="${tongMauThongBao}">0</span></div></div>
+            <div class="col-lg-3 col-md-6"><div class="catalog-summary-card green h-100"><span class="label">Mẫu báo cáo</span><span class="value" th:text="${tongMauBaoCao}">0</span></div></div>
+            <div class="col-lg-3 col-md-6"><div class="catalog-summary-card amber h-100"><span class="label">Thông báo hạn trả</span><span class="value" th:text="${tongThongBaoHanTra}">0</span></div></div>
+            <div class="col-lg-3 col-md-6"><div class="catalog-summary-card blue h-100"><span class="label">Sự kiện</span><span class="value" th:text="${tongThongBaoSuKien}">0</span></div></div>
+        </section>
+
+        <section class="row g-4 mb-4 align-items-start" id="notification-section">
+            <div class="col-lg-4" th:if="${canManage}">
+                <div class="lib-form-shell h-100">
+                    <div class="lib-form-head">
+                        <h4 class="mb-1"><i class="fas fa-bell me-2"></i>Tạo / Chỉnh Sửa Mẫu</h4>
+                        <p class="mb-0 text-white-50">Mẫu báo cáo, thông báo thư viện, hạn trả sách và sự kiện.</p>
+                    </div>
+                    <div class="lib-form-body">
+                        <form method="post" action="/thongBao/mau" th:object="${mauForm}">
+                            <input type="hidden" th:field="*{id}">
+                            <input type="hidden" name="ky" th:value="${ky}">
+                            <input type="hidden" name="namHoc" th:value="${namHoc}">
+                            <div class="row g-2">
+                                <div class="col-6"><label class="form-label">Mã mẫu</label><input type="text" class="form-control" th:field="*{maMau}" placeholder="TB001"></div>
+                                <div class="col-6"><label class="form-label">Loại</label>
+                                    <select class="form-select" th:field="*{loaiThongBao}">
+                                        <option value="Mẫu báo cáo">Mẫu báo cáo</option>
+                                        <option value="Thông báo thư viện">Thông báo thư viện</option>
+                                        <option value="Thông báo hạn trả sách">Thông báo hạn trả sách</option>
+                                        <option value="Thông báo sự kiện">Thông báo sự kiện</option>
+                                    </select>
+                                </div>
+                                <div class="col-12"><label class="form-label">Tiêu đề</label><input type="text" class="form-control" th:field="*{tieuDe}" placeholder="Nhắc hạn trả sách tuần này"></div>
+                                <div class="col-12"><label class="form-label">Nội dung</label><textarea class="form-control" th:field="*{noiDung}" rows="4" placeholder="Nhập nội dung thông báo hoặc mẫu báo cáo"></textarea></div>
+                                <div class="col-6"><label class="form-label">Đối tượng</label><input type="text" class="form-control" th:field="*{doiTuong}" placeholder="Toàn thư viện"></div>
+                                <div class="col-6"><label class="form-label">Kênh gửi</label><input type="text" class="form-control" th:field="*{kenhGui}" placeholder="Trong hệ thống"></div>
+                                <div class="col-6"><label class="form-label">Trạng thái</label>
+                                    <select class="form-select" th:field="*{trangThai}">
+                                        <option value="Nháp">Nháp</option>
+                                        <option value="Đã gửi">Đã gửi</option>
+                                        <option value="Lên lịch">Lên lịch</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary w-100 mt-3" type="submit"><i class="fas fa-save me-2"></i>Lưu mẫu thông báo</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div th:class="${canManage} ? 'col-lg-8' : 'col-lg-12'">
+                <div class="catalog-table-shell h-100">
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0">
+                            <thead>
+                            <tr>
+                                <th>Mã</th>
+                                <th>Loại</th>
+                                <th>Tiêu đề</th>
+                                <th>Nội dung</th>
+                                <th>Đối tượng</th>
+                                <th>Trạng thái</th>
+                                <th class="text-center" th:if="${canManage}">Chức năng</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="mau : ${mauList}">
+                                <td th:text="${mau.maMau}">TB001</td>
+                                <td th:text="${mau.loaiThongBao}">Thông báo thư viện</td>
+                                <td>
+                                    <div class="fw-semibold" th:text="${mau.tieuDe}">Nhắc hạn trả sách</div>
+                                    <div class="small text-muted" th:text="${mau.ngayCapNhat != null ? #temporals.format(mau.ngayCapNhat, 'dd/MM/yyyy HH:mm') : '-'}">01/01/2026 08:00</div>
+                                </td>
+                                <td class="text-break" th:text="${mau.noiDung}">Nội dung thông báo</td>
+                                <td th:text="${mau.doiTuong != null ? mau.doiTuong : '-'}">Toàn thư viện</td>
+                                <td><span class="badge rounded-pill bg-secondary" th:text="${mau.trangThai != null ? mau.trangThai : 'Nháp'}">Nháp</span></td>
+                                <td class="text-center" th:if="${canManage}">
+                                    <div class="catalog-action-group justify-content-center">
+                                        <a th:href="@{/thongBao/chinh-sua/{id}(id=${mau.id},ky=${ky},namHoc=${namHoc})}" class="catalog-action-btn edit" title="Chỉnh sửa"><i class="fas fa-pen"></i></a>
+                                        <form th:action="@{/thongBao/xoa/{id}(id=${mau.id},ky=${ky},namHoc=${namHoc})}" method="post" class="d-inline">
+                                            <input type="hidden" name="ky" th:value="${ky}">
+                                            <input type="hidden" name="namHoc" th:value="${namHoc}">
+                                            <button type="submit" class="catalog-action-btn delete" title="Xóa"><i class="fas fa-trash"></i></button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(mauList)}">
+                                <td colspan="7"><div class="catalog-empty-state"><div class="fw-bold mb-1">Chưa có mẫu thông báo</div><div class="small">Tạo mẫu đầu tiên để dùng cho báo cáo và gửi thông báo.</div></div></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="row g-3 mb-3 align-items-stretch" th:if="${canManage}">
+            <div class="col-lg-6">
+                <div class="catalog-table-shell h-100">
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0">
+                            <thead>
+                            <tr>
+                                <th>Trạng thái mượn trả</th>
+                                <th>Số lượng</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="entry : ${thongKeTrangThai}">
+                                <td th:text="${entry.key}">Đang mượn</td>
+                                <td th:text="${entry.value}">0</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="catalog-table-shell h-100">
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0">
+                            <thead>
+                            <tr>
+                                <th>Người dùng vi phạm</th>
+                                <th>Số lần</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="entry : ${thongKeViPhamNguoiDung}">
+                                <td th:text="${entry.key}">Nguyễn Văn An</td>
+                                <td th:text="${entry.value}">0</td>
+                            </tr>
+                            <tr th:if="${#maps.isEmpty(thongKeViPhamNguoiDung)}">
+                                <td colspan="2"><div class="catalog-empty-state"><div class="fw-bold mb-1">Chưa có vi phạm</div><div class="small">Báo cáo vi phạm sẽ hiển thị tại đây.</div></div></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="row g-4 mb-4 align-items-start" id="report-section" th:if="${canManage}">
+            <div class="col-lg-4">
+                <div class="lib-form-shell h-100">
+                    <div class="lib-form-head info">
+                        <h4 class="mb-1"><i class="fas fa-chart-column me-2"></i>Thống Kê Theo Kỳ / Năm Học</h4>
+                        <p class="mb-0 text-white-50">Lọc báo cáo theo học kỳ hoặc cả năm học.</p>
+                    </div>
+                    <div class="lib-form-body">
+                        <form method="get" action="/thongBao">
+                            <div class="row g-2">
+                                <div class="col-6"><label class="form-label">Kỳ</label>
+                                    <select class="form-select" name="ky">
+                                        <option value="CA_NAM" th:selected="${ky == 'CA_NAM'}">Cả năm</option>
+                                        <option value="HK1" th:selected="${ky == 'HK1'}">Học kỳ 1</option>
+                                        <option value="HK2" th:selected="${ky == 'HK2'}">Học kỳ 2</option>
+                                    </select>
+                                </div>
+                                <div class="col-6"><label class="form-label">Năm học</label><input type="text" class="form-control" name="namHoc" th:value="${namHoc}" placeholder="2025-2026"></div>
+                            </div>
+                            <button class="btn btn-outline-success w-100 mt-3" type="submit"><i class="fas fa-filter me-2"></i>Xem thống kê</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6 col-xl-3"><div class="catalog-summary-card blue h-100"><span class="label">Đang mượn</span><span class="value" th:text="${tongMuonDangMuon}">0</span></div></div>
+                    <div class="col-md-6 col-xl-3"><div class="catalog-summary-card green h-100"><span class="label">Đã trả</span><span class="value" th:text="${tongMuonDaTra}">0</span></div></div>
+                    <div class="col-md-6 col-xl-3"><div class="catalog-summary-card amber h-100"><span class="label">Quá hạn</span><span class="value" th:text="${tongMuonQuaHan}">0</span></div></div>
+                    <div class="col-md-6 col-xl-3"><div class="catalog-summary-card blue h-100"><span class="label">Vi phạm</span><span class="value" th:text="${tongViPham}">0</span></div></div>
+                </div>
+
+                <div class="catalog-table-shell mb-3">
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0">
+                            <thead>
+                            <tr>
+                                <th>Trạng thái mượn trả</th>
+                                <th>Số lượng</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="entry : ${thongKeTrangThai}">
+                                <td th:text="${entry.key}">Đang mượn</td>
+                                <td th:text="${entry.value}">0</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="catalog-table-shell h-100">
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0">
+                            <thead>
+                            <tr>
+                                <th>Mã phiếu</th>
+                                <th>Độc giả</th>
+                                <th>Ngày mượn</th>
+                                <th>Ngày hẹn trả</th>
+                                <th>Ngày trả</th>
+                                <th>Trạng thái</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="phieu : ${muonTraList}">
+                                <td th:text="${phieu.banCode}">PM001</td>
+                                <td th:text="${phieu.tenKhachHang}">Nguyễn Văn An</td>
+                                <td th:text="${phieu.ngayBan != null ? #temporals.format(phieu.ngayBan, 'dd/MM/yyyy HH:mm') : '-'}">01/01/2026 08:00</td>
+                                <td th:text="${phieu.ngayHenTra != null ? #temporals.format(phieu.ngayHenTra, 'dd/MM/yyyy HH:mm') : '-'}">15/01/2026 08:00</td>
+                                <td th:text="${phieu.ngayTra != null ? #temporals.format(phieu.ngayTra, 'dd/MM/yyyy HH:mm') : '-'}">-</td>
+                                <td th:text="${phieu.trangThai}">Đang mượn</td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(muonTraList)}">
+                                <td colspan="6"><div class="catalog-empty-state"><div class="fw-bold mb-1">Không có dữ liệu trong kỳ</div><div class="small">Thử đổi kỳ hoặc năm học để xem báo cáo khác.</div></div></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

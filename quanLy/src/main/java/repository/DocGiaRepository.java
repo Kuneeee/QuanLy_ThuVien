@@ -7,9 +7,12 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface DocGiaRepository extends JpaRepository<DocGia, String> {
+
+    Optional<DocGia> findByTaiKhoan(String taiKhoan);
     
     // Find customers by name containing (case insensitive)
     List<DocGia> findByTenKhachHangContainingIgnoreCase(String tenKhachHang);

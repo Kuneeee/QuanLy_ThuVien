@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biên Lai Xử Phạt</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="/css/library-ui.css" rel="stylesheet">
+    <style>
+        @media print {
+            .no-print { display: none !important; }
+            body { background: #fff; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container my-5">
+        <div class="no-print d-flex justify-content-between align-items-center mb-3">
+            <a href="/phong" class="btn btn-outline-secondary"><i class="fas fa-arrow-left me-2"></i>Quay lại</a>
+            <button class="btn btn-primary" onclick="window.print()"><i class="fas fa-print me-2"></i>In biên lai</button>
+        </div>
+
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-danger text-white py-3">
+                <h3 class="mb-0">Biên Lai Xử Phạt Vi Phạm Thư Viện</h3>
+            </div>
+            <div class="card-body p-4">
+                <div class="row g-3">
+                    <div class="col-md-6"><strong>Số biên lai:</strong> <span th:text="${viPham.soBienLai}">BLP0001</span></div>
+                    <div class="col-md-6"><strong>Ngày ghi nhận:</strong> <span th:text="${viPham.ngayGhiNhan != null ? #temporals.format(viPham.ngayGhiNhan, 'dd/MM/yyyy HH:mm') : '-'}">01/01/2026 08:00</span></div>
+                    <div class="col-md-6"><strong>Độc giả:</strong> <span th:text="${viPham.tenDocGia}">Trần Thị Bích</span> (<span th:text="${viPham.maDocGia}">DG002</span>)</div>
+                    <div class="col-md-6"><strong>Loại vi phạm:</strong> <span th:text="${viPham.loaiViPham}">Quá hạn mượn</span></div>
+                    <div class="col-md-6"><strong>Tài liệu:</strong> <span th:text="${viPham.tenTaiLieu != null ? viPham.tenTaiLieu : '-'}">Lập trình Java căn bản</span></div>
+                    <div class="col-md-6"><strong>Mã tài liệu:</strong> <span th:text="${viPham.maTaiLieu != null ? viPham.maTaiLieu : '-'}">TL001</span></div>
+                    <div class="col-md-4"><strong>Đền bù:</strong> <span th:text="${viPham.soTienDenBu != null ? #numbers.formatDecimal(viPham.soTienDenBu, 0, 'COMMA', 0, 'POINT') + ' ₫' : '0 ₫'}">0 ₫</span></div>
+                    <div class="col-md-4"><strong>Phạt:</strong> <span th:text="${viPham.soTienPhat != null ? #numbers.formatDecimal(viPham.soTienPhat, 0, 'COMMA', 0, 'POINT') + ' ₫' : '0 ₫'}">15,000 ₫</span></div>
+                    <div class="col-md-4"><strong>Tổng tiền:</strong> <span class="fw-bold text-danger" th:text="${viPham.tongTien != null ? #numbers.formatDecimal(viPham.tongTien, 0, 'COMMA', 0, 'POINT') + ' ₫' : '0 ₫'}">15,000 ₫</span></div>
+                    <div class="col-12"><strong>Ghi chú:</strong> <span th:text="${viPham.ghiChu != null ? viPham.ghiChu : '-'}">Mẫu vi phạm để minh họa</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

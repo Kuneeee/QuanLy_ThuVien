@@ -13,7 +13,7 @@
         <div class="container position-relative">
             <span class="eyebrow"><i class="fas fa-eye"></i>Xem chi tiết</span>
             <h1 class="display-5 fw-bold mb-3">Chi Tiết Phiếu Mượn - Trả</h1>
-            <p class="lead mb-0 text-white-50">Tổng hợp thông tin phiếu trong một khung dễ đọc.</p>
+                    <p class="lead mb-0 text-white-50">Tổng hợp thông tin phiếu, hạn trả, số ngày mượn và lịch sử liên quan.</p>
         </div>
     </section>
 
@@ -22,10 +22,11 @@
             <div class="detail-head d-flex flex-wrap align-items-center justify-content-between gap-3">
                 <div>
                     <h4 class="mb-1"><i class="fas fa-file-lines me-2"></i>Phiếu mượn <span th:text="${ban.banCode}">PM001</span></h4>
-                    <p class="mb-0 text-white-50">Mã tài liệu <span th:text="${ban.hangHoaID}">TL001</span></p>
+                    <p class="mb-0 text-white-50">Mã tài liệu <span th:text="${ban.hangHoaID}">TL001</span> | Trạng thái <span th:text="${ban.trangThai ?: 'Đang mượn'}">Đang mượn</span></p>
                 </div>
                 <div class="d-flex flex-wrap gap-2">
                     <a th:href="@{/muonTra/{id}/edit(id=${ban.banId})}" class="btn btn-light rounded-pill px-3"><i class="fas fa-pen-to-square me-2"></i>Sửa</a>
+                    <a href="/muonTra" class="btn btn-outline-light rounded-pill px-3"><i class="fas fa-bookmark me-2"></i>Đặt trước / mượn</a>
                     <a href="/muonTra" class="btn btn-outline-light rounded-pill px-3"><i class="fas fa-list me-2"></i>Danh sách</a>
                 </div>
             </div>
@@ -44,6 +45,22 @@
                     <div class="lib-meta-card">
                         <span class="label">Số lượng</span>
                         <div class="value" th:text="${ban.soLuongBan}">1</div>
+                    </div>
+                    <div class="lib-meta-card">
+                        <span class="label">Hẹn trả</span>
+                        <div class="value" th:text="${ban.ngayHenTra != null ? #temporals.format(ban.ngayHenTra, 'dd/MM/yyyy HH:mm') : 'Chưa cập nhật'}">15/01/2025 08:00</div>
+                    </div>
+                    <div class="lib-meta-card">
+                        <span class="label">Ngày trả</span>
+                        <div class="value" th:text="${ban.ngayTra != null ? #temporals.format(ban.ngayTra, 'dd/MM/yyyy HH:mm') : '-'}">-</div>
+                    </div>
+                    <div class="lib-meta-card">
+                        <span class="label">Số ngày mượn</span>
+                        <div class="value" th:text="${soNgayMuon}">14</div>
+                    </div>
+                    <div class="lib-meta-card">
+                        <span class="label">Số ngày trễ</span>
+                        <div class="value" th:text="${soNgayTre}">0</div>
                     </div>
                     <div class="lib-meta-card">
                         <span class="label">Tổng tiền</span>
@@ -69,6 +86,72 @@
                             <div class="mb-2"><span class="text-muted">ID nội bộ:</span> <strong th:text="${ban.banId}">1</strong></div>
                             <div class="text-muted small">Dữ liệu này được nạp tự động từ seeder nếu cơ sở dữ liệu đang trống.</div>
                         </div>
+                    </div>
+                </div>
+
+                <div class="row g-3 mt-3">
+                    <div class="col-lg-6">
+                        <div class="border rounded-4 p-4 h-100 bg-light bg-opacity-50">
+                            <h6 class="fw-bold mb-3"><i class="fas fa-clock-rotate-left me-2 text-warning"></i>Gia hạn thời gian mượn</h6>
+                            <form th:action="@{/muonTra/{id}/gia-han(id=${ban.banId})}" method="post" class="row g-2 align-items-end">
+                                <div class="col-8">
+                                    <label class="form-label">Số ngày gia hạn</label>
+                                    <input type="number" class="form-control" name="soNgayGiaHan" th:value="${ban.soNgayGiaHan != null ? ban.soNgayGiaHan : 7}" min="1">
+                                </div>
+                                <div class="col-4">
+                                    <button class="btn btn-warning w-100" type="submit">Gia hạn</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="border rounded-4 p-4 h-100 bg-light bg-opacity-50">
+                            <h6 class="fw-bold mb-3"><i class="fas fa-circle-check me-2 text-success"></i>Ghi nhận trả sách</h6>
+                            <form th:action="@{/muonTra/{id}/tra-sach(id=${ban.banId})}" method="post" class="row g-2 align-items-end">
+                                <div class="col-8">
+                                    <label class="form-label">Ngày trả</label>
+                                    <input type="datetime-local" class="form-control" name="ngayTra">
+                                </div>
+                                <div class="col-4">
+                                    <button class="btn btn-success w-100" type="submit">Lưu trả</button>
+                                </div>
+                            </form>
+                            <div class="text-muted small mt-2">Sau khi lưu, hệ thống tự cập nhật trạng thái và số ngày mượn.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+                        <h5 class="mb-0"><i class="fas fa-list-check me-2"></i>Lịch sử mượn liên quan</h5>
+                        <span class="badge bg-light text-dark" th:text="${#lists.size(lichSuMuon)}">0</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-dark table-hover align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Mã phiếu</th>
+                                    <th>Độc giả</th>
+                                    <th>Ngày mượn</th>
+                                    <th>Hẹn trả</th>
+                                    <th>Ngày trả</th>
+                                    <th>Trạng thái</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="item : ${lichSuMuon}">
+                                    <td th:text="${item.banCode}">PM001</td>
+                                    <td th:text="${item.tenKhachHang != null ? item.tenKhachHang : item.khachHang}">Nguyễn Văn An</td>
+                                    <td th:text="${item.ngayBan != null ? #temporals.format(item.ngayBan, 'dd/MM/yyyy HH:mm') : '-'}">01/01/2025 08:00</td>
+                                    <td th:text="${item.ngayHenTra != null ? #temporals.format(item.ngayHenTra, 'dd/MM/yyyy HH:mm') : '-'}">15/01/2025 08:00</td>
+                                    <td th:text="${item.ngayTra != null ? #temporals.format(item.ngayTra, 'dd/MM/yyyy HH:mm') : '-'}">-</td>
+                                    <td th:text="${item.trangThai != null ? item.trangThai : 'Đang mượn'}">Đang mượn</td>
+                                </tr>
+                                <tr th:if="${#lists.isEmpty(lichSuMuon)}">
+                                    <td colspan="6" class="text-center text-white-50 py-4">Chưa có lịch sử mượn cho tài liệu này.</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

@@ -3,16 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chi Tiết Độc Giả</title>
+    <title>Chi tiết tài khoản</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="/css/library-ui.css" rel="stylesheet">
 </head>
 <body>
+    <div class="admin-shell">
+        <aside th:replace="~{fragments/sidebar :: librarySidebar('docGia')}"></aside>
+
+        <main class="admin-main">
     <section class="lib-hero">
         <div class="container position-relative">
             <span class="eyebrow"><i class="fas fa-eye"></i>Xem hồ sơ</span>
-            <h1 class="display-5 fw-bold mb-3">Chi Tiết Độc Giả</h1>
+            <h1 class="display-5 fw-bold mb-3">Chi Tiết Tài Khoản</h1>
             <p class="lead mb-0 text-white-50">Thông tin cá nhân và mức độ hoạt động trong hệ thống thư viện.</p>
         </div>
     </section>
@@ -22,7 +26,7 @@
             <div class="detail-head d-flex flex-wrap align-items-center justify-content-between gap-3">
                 <div>
                     <h4 class="mb-1"><i class="fas fa-user-graduate me-2"></i><span th:text="${khachHang.tenKhachHang}">Nguyễn Văn An</span></h4>
-                    <p class="mb-0 text-white-50">Mã độc giả <span th:text="${khachHang.khachHangId}">DG001</span></p>
+                    <p class="mb-0 text-white-50">Thông tin tài khoản đã được cấp quyền quản trị.</p>
                 </div>
                 <div class="d-flex flex-wrap gap-2">
                     <a th:href="@{/docGia/{id}/edit(id=${khachHang.khachHangId})}" class="btn btn-light rounded-pill px-3"><i class="fas fa-pen-to-square me-2"></i>Sửa</a>
@@ -33,8 +37,16 @@
             <div class="detail-body">
                 <div class="lib-meta-grid mb-4">
                     <div class="lib-meta-card">
-                        <span class="label">Loại độc giả</span>
-                        <div class="value" th:text="${khachHang.loaiKhachHang ?: 'Thường'}">Sinh viên</div>
+                        <span class="label">Tài khoản</span>
+                        <div class="value" th:text="${khachHang.taiKhoan ?: 'Chưa cập nhật'}">an.nguyen</div>
+                    </div>
+                    <div class="lib-meta-card">
+                        <span class="label">Mật khẩu</span>
+                        <div class="value">********</div>
+                    </div>
+                    <div class="lib-meta-card">
+                        <span class="label">Quyền</span>
+                        <div class="value" th:text="${khachHang.quyenHan ?: khachHang.loaiKhachHang ?: 'Chưa cập nhật'}">Sinh viên</div>
                     </div>
                     <div class="lib-meta-card">
                         <span class="label">Điểm tích lũy</span>
@@ -62,7 +74,6 @@
                     <div class="col-lg-6">
                         <div class="border rounded-4 p-4 h-100 bg-light bg-opacity-50">
                             <h6 class="fw-bold mb-3"><i class="fas fa-chart-line me-2 text-success"></i>Hoạt động</h6>
-                            <div class="mb-2"><span class="text-muted">Mã độc giả:</span> <strong th:text="${khachHang.khachHangId}">DG001</strong></div>
                             <div class="mb-2"><span class="text-muted">Ngày tham gia:</span> <strong th:text="${khachHang.ngayThamGia != null ? #temporals.format(khachHang.ngayThamGia, 'dd/MM/yyyy') : 'Chưa cập nhật'}">01/01/2025</strong></div>
                             <div class="mb-2"><span class="text-muted">Ngày tạo:</span> <strong th:text="${khachHang.ngayTao != null ? #temporals.format(khachHang.ngayTao, 'dd/MM/yyyy HH:mm') : 'Chưa cập nhật'}">01/01/2025 08:00</strong></div>
                             <div class="text-muted small">Dữ liệu đang dùng bộ mẫu nạp tự động từ seeder.</div>
@@ -71,6 +82,8 @@
                 </div>
             </div>
         </div>
+    </div>
+        </main>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
