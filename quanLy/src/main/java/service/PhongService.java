@@ -1,6 +1,7 @@
 package service;
 
 import entity.DatPhong;
+import entity.MuonTra;
 import entity.LichTrongPhong;
 import entity.TaiLieu;
 import entity.ViPhamPhong;
@@ -109,8 +110,39 @@ public class PhongService {
         return viPhamPhongRepository.save(viPhamPhong);
     }
 
+    public ViPhamPhong taoViPhamTuMuonTra(MuonTra ban) {
+        if (ban == null) {
+            throw new IllegalArgumentException("Không tìm thấy phiếu mượn để chuyển sang vi phạm");
+        }
+
+        ViPhamPhong viPhamPhong = new ViPhamPhong();
+        viPhamPhong.setSoBienLai(null);
+        viPhamPhong.setMaDocGia(ban.getKhachHang());
+        viPhamPhong.setTenDocGia(ban.getTenKhachHang());
+        viPhamPhong.setMaTaiLieu(ban.getHangHoaID());
+        viPhamPhong.setTenTaiLieu(ban.getTenHangHoa());
+        viPhamPhong.setLoaiViPham("Quá hạn mượn");
+        viPhamPhong.setSoLuong(ban.getSoLuongBan() != null ? ban.getSoLuongBan() : 1);
+        int soNgayQuaHan = (int) Math.max(ban.tinhSoNgayTre(), 0);
+        viPhamPhong.setSoNgayQuaHan(soNgayQuaHan);
+        viPhamPhong.setSoTienDenBu(BigDecimal.ZERO);
+        viPhamPhong.setSoTienPhat(BigDecimal.valueOf(soNgayQuaHan).multiply(BigDecimal.valueOf(15000)));
+        viPhamPhong.setTongTien(viPhamPhong.getSoTienDenBu().add(viPhamPhong.getSoTienPhat()));
+        viPhamPhong.setGhiChu("Tự động chuyển từ phiếu mượn " + (ban.getBanCode() != null ? ban.getBanCode() : ban.getBanId()));
+        viPhamPhong.setNgayGhiNhan(LocalDateTime.now());
+        return viPhamPhong;
+    }
+
     public Optional<ViPhamPhong> getViPhamById(Long id) {
         return viPhamPhongRepository.findById(id);
+    }
+    
+    public boolean xoaViPham(Long id) {
+        if (id != null && viPhamPhongRepository.existsById(id)) {
+            viPhamPhongRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 
     public BigDecimal tinhChiPhi(ViPhamPhong viPhamPhong) {
@@ -123,7 +155,7 @@ public class PhongService {
                 throw new IllegalArgumentException("Số ngày quá hạn phải lớn hơn hoặc bằng 0");
             }
             int soNgay = viPhamPhong.getSoNgayQuaHan();
-            phat = BigDecimal.valueOf(soNgay).multiply(BigDecimal.valueOf(5000));
+            phat = BigDecimal.valueOf(soNgay).multiply(BigDecimal.valueOf(15000));
         } else if ("mất".equals(loaiViPham) || "mat".equals(loaiViPham) || "hư hỏng".equals(loaiViPham) || "hu hong".equals(loaiViPham)) {
             if (viPhamPhong.getMaTaiLieu() == null || viPhamPhong.getMaTaiLieu().isBlank()) {
                 throw new IllegalArgumentException("Mã tài liệu là bắt buộc khi ghi nhận mất hoặc hư hỏng");

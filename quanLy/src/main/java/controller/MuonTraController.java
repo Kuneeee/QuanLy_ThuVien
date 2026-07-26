@@ -2,6 +2,7 @@ package controller;
 
 import entity.MuonTra;
 import entity.DocGia;
+import entity.TaiLieu;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,10 +16,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import service.MuonTraService;
 import service.DocGiaService;
+import repository.TaiLieuRepository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.time.LocalDateTime;
-import java.math.BigDecimal;
 import java.util.stream.Collectors;
 
 @Controller
@@ -30,6 +32,9 @@ public class MuonTraController {
 
     @Autowired
     private DocGiaService docGiaService;
+
+    @Autowired
+    private TaiLieuRepository taiLieuRepository;
     
     // Trang danh sách phiếu bán
     @GetMapping
@@ -121,14 +126,17 @@ public class MuonTraController {
     }
 
     @PostMapping("/tra-sach")
-    public String ghiNhanTraSachNhanh(@RequestParam Long id,
+    public String ghiNhanTraSachNhanh(@RequestParam String id,
                                       @RequestParam(value = "ngayTra", required = false) String ngayTraStr) {
         LocalDateTime ngayTra = null;
         if (ngayTraStr != null && !ngayTraStr.isBlank()) {
             ngayTra = LocalDateTime.parse(ngayTraStr);
         }
-        muonTraService.ghiNhanTra(id, ngayTra);
-        return "redirect:/muonTra/" + id;
+        MuonTra phieuTra = muonTraService.ghiNhanTra(id, ngayTra);
+        if (phieuTra == null || phieuTra.getBanId() == null) {
+            return "redirect:/muonTra?error=tra-sach-failed";
+        }
+        return "redirect:/muonTra/" + phieuTra.getBanId();
     }
 
     @PostMapping("/{id}/gia-han")
@@ -142,7 +150,25 @@ public class MuonTraController {
     public String viewMuonTra(@PathVariable Long id, Model model) {
         MuonTra ban = muonTraService.getBanById(id)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy phiếu bán"));
+        TaiLieu taiLieu = ban.getHangHoaID() != null ? taiLieuRepository.findById(ban.getHangHoaID()).orElse(null) : null;
+        BigDecimal giaNhapHienThi = ban.getGiaNhap();
+        if ((giaNhapHienThi == null || giaNhapHienThi.compareTo(BigDecimal.ZERO) <= 0) && taiLieu != null && taiLieu.getGiaNhap() != null) {
+            giaNhapHienThi = taiLieu.getGiaNhap();
+        }
+        BigDecimal giaBanHienThi = ban.getGiaBan();
+        if (giaBanHienThi == null || giaBanHienThi.compareTo(BigDecimal.ZERO) <= 0) {
+            giaBanHienThi = giaNhapHienThi;
+        }
+        BigDecimal tongTienHienThi = ban.getTongTien();
+        if ((tongTienHienThi == null || tongTienHienThi.compareTo(BigDecimal.ZERO) <= 0)
+                && giaBanHienThi != null && ban.getSoLuongBan() != null) {
+            tongTienHienThi = giaBanHienThi.multiply(BigDecimal.valueOf(ban.getSoLuongBan()));
+        }
         model.addAttribute("ban", ban);
+        model.addAttribute("giaNhapHienThi", giaNhapHienThi);
+        model.addAttribute("giaBanHienThi", giaBanHienThi);
+        model.addAttribute("tongTienHienThi", tongTienHienThi);
+        model.addAttribute("canManagePenalty", canManageLoans());
         model.addAttribute("soNgayMuon", muonTraService.tinhSoNgayMuon(ban));
         model.addAttribute("soNgayTre", muonTraService.tinhSoNgayTre(ban));
         model.addAttribute("lichSuMuon", muonTraService.getAllBan().stream()

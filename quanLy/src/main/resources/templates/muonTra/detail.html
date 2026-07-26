@@ -28,6 +28,7 @@
                     <a th:href="@{/muonTra/{id}/edit(id=${ban.banId})}" class="btn btn-light rounded-pill px-3"><i class="fas fa-pen-to-square me-2"></i>Sửa</a>
                     <a href="/muonTra" class="btn btn-outline-light rounded-pill px-3"><i class="fas fa-bookmark me-2"></i>Đặt trước / mượn</a>
                     <a href="/muonTra" class="btn btn-outline-light rounded-pill px-3"><i class="fas fa-list me-2"></i>Danh sách</a>
+                    <a th:if="${canManagePenalty and soNgayTre > 0}" th:href="@{/phong/vi-pham/tu-muon-tra/{id}(id=${ban.banId})}" class="btn btn-warning rounded-pill px-3 text-dark"><i class="fas fa-triangle-exclamation me-2"></i>Chuyển sang vi phạm</a>
                 </div>
             </div>
 
@@ -64,7 +65,7 @@
                     </div>
                     <div class="lib-meta-card">
                         <span class="label">Tổng tiền</span>
-                        <div class="value text-success" th:text="${ban.tongTien != null ? #numbers.formatDecimal(ban.tongTien, 0, 'COMMA', 0, 'POINT') + ' ₫' : '0 ₫'}">120,000 ₫</div>
+                        <div class="value text-success" th:text="${tongTienHienThi != null ? #numbers.formatDecimal(tongTienHienThi, 0, 'COMMA', 0, 'POINT') + ' ₫' : '0 ₫'}">120,000 ₫</div>
                     </div>
                 </div>
 
@@ -74,8 +75,8 @@
                             <h6 class="fw-bold mb-3"><i class="fas fa-book-open me-2 text-primary"></i>Thông tin tài liệu</h6>
                             <div class="mb-2"><span class="text-muted">Mã tài liệu:</span> <strong th:text="${ban.hangHoaID}">TL001</strong></div>
                             <div class="mb-2"><span class="text-muted">Tên tài liệu:</span> <strong th:text="${ban.tenHangHoa}">Lập trình Java căn bản</strong></div>
-                            <div class="mb-2"><span class="text-muted">Giá mượn:</span> <strong th:text="${ban.giaBan != null ? #numbers.formatDecimal(ban.giaBan, 0, 'COMMA', 0, 'POINT') + ' ₫' : '0 ₫'}">120,000 ₫</strong></div>
-                            <div><span class="text-muted">Giá nhập tham chiếu:</span> <strong th:text="${ban.giaNhap != null ? #numbers.formatDecimal(ban.giaNhap, 0, 'COMMA', 0, 'POINT') + ' ₫' : '0 ₫'}">85,000 ₫</strong></div>
+                            <div class="mb-2"><span class="text-muted">Giá mượn:</span> <strong th:text="${giaBanHienThi != null ? #numbers.formatDecimal(giaBanHienThi, 0, 'COMMA', 0, 'POINT') + ' ₫' : '0 ₫'}">120,000 ₫</strong></div>
+                            <div><span class="text-muted">Giá nhập tham chiếu:</span> <strong th:text="${giaNhapHienThi != null ? #numbers.formatDecimal(giaNhapHienThi, 0, 'COMMA', 0, 'POINT') + ' ₫' : '0 ₫'}">85,000 ₫</strong></div>
                         </div>
                     </div>
                     <div class="col-lg-6">

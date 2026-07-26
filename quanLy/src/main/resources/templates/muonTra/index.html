@@ -98,6 +98,7 @@
                                             <th>Độc Giả</th>
                                             <th>Ngày Hẹn</th>
                                             <th>Số Lượng</th>
+                                            <th class="text-center">Chức Năng</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -110,9 +111,16 @@
                                             <td th:text="${ban.tenKhachHang != null ? ban.tenKhachHang : ban.khachHang}">Nguyễn Văn An</td>
                                             <td th:text="${ban.ngayHenTra != null ? #temporals.format(ban.ngayHenTra, 'dd/MM/yyyy HH:mm') : '-'}">15/01/2025 08:00</td>
                                             <td th:text="${ban.soLuongBan}">1</td>
+                                            <td class="text-center">
+                                                <div class="catalog-action-group justify-content-center">
+                                                    <button type="button" class="catalog-action-btn delete delete-btn" th:attr="data-id=${ban.banId},data-name=${ban.banCode}" title="Xóa phiếu đặt trước">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
                                         </tr>
                                         <tr th:if="${#lists.isEmpty(datTruocList)}">
-                                            <td colspan="5"><div class="catalog-empty-state"><div class="fw-bold mb-1">Chưa có yêu cầu đặt trước</div><div class="small">Danh sách sẽ hiện ở đây sau khi tạo yêu cầu.</div></div></td>
+                                            <td colspan="6"><div class="catalog-empty-state"><div class="fw-bold mb-1">Chưa có yêu cầu đặt trước</div><div class="small">Danh sách sẽ hiện ở đây sau khi tạo yêu cầu.</div></div></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -198,7 +206,7 @@
                             <div class="lib-form-body">
                                 <form method="post" action="/muonTra/tra-sach">
                                     <div class="row g-3">
-                                        <div class="col-md-6"><label class="form-label">Mã phiếu</label><input type="text" class="form-control" name="id" inputmode="numeric" pattern="[0-9]*" placeholder="Nhập mã phiếu" required></div>
+                                        <div class="col-md-6"><label class="form-label">Mã phiếu</label><input type="text" class="form-control" name="id" inputmode="text" placeholder="Nhập mã phiếu" required></div>
                                         <div class="col-md-6"><label class="form-label">Ngày trả</label><input type="datetime-local" class="form-control" name="ngayTra"></div>
                                         <div class="col-12"><label class="form-label">Lưu ý</label><input type="text" class="form-control" value="Hệ thống sẽ tự chuyển trạng thái sang Đã trả" readonly></div>
                                     </div>

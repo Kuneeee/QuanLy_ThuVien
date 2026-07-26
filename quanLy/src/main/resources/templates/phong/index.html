@@ -222,6 +222,7 @@
                                         <th>Phạt</th>
                                         <th>Tổng</th>
                                         <th class="text-center">In biên lai</th>
+                                        <th class="text-center" th:if="${canManagePenalty}">Xóa</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -236,9 +237,15 @@
                                         <td class="text-center">
                                             <a th:href="@{/phong/bien-lai/{id}(id=${viPham.id})}" class="btn btn-outline-success btn-sm"><i class="fas fa-print me-1"></i>In</a>
                                         </td>
+                                        <td class="text-center" th:if="${canManagePenalty}">
+                                            <form th:action="@{/phong/vi-pham/xoa/{id}(id=${viPham.id})}" method="post" class="d-inline" onsubmit="return confirm('Xóa vi phạm này?');">
+                                                <button type="submit" class="btn btn-outline-danger btn-sm"><i class="fas fa-trash me-1"></i>Xóa</button>
+                                            </form>
+                                        </td>
                                     </tr>
                                     <tr th:if="${#lists.isEmpty(viPhamList)}">
-                                        <td colspan="8"><div class="catalog-empty-state"><div class="fw-bold mb-1">Chưa có vi phạm</div><div class="small">Biên lai và chi phí sẽ hiển thị ở đây.</div></div></td>
+                                        <td colspan="9" th:if="${canManagePenalty}"><div class="catalog-empty-state"><div class="fw-bold mb-1">Chưa có vi phạm</div><div class="small">Biên lai và chi phí sẽ hiển thị ở đây.</div></div></td>
+                                        <td colspan="8" th:if="${!canManagePenalty}"><div class="catalog-empty-state"><div class="fw-bold mb-1">Chưa có vi phạm</div><div class="small">Biên lai và chi phí sẽ hiển thị ở đây.</div></div></td>
                                     </tr>
                                 </tbody>
                             </table>

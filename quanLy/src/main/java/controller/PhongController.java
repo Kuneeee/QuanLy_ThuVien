@@ -1,6 +1,7 @@
 package controller;
 
 import entity.DatPhong;
+import entity.MuonTra;
 import entity.LichTrongPhong;
 import entity.ViPhamPhong;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import service.MuonTraService;
 import service.PhongService;
 
 import java.util.List;
@@ -23,6 +25,9 @@ public class PhongController {
 
     @Autowired
     private PhongService phongService;
+
+    @Autowired
+    private MuonTraService muonTraService;
 
     @GetMapping
     public String index(Model model) {
@@ -75,6 +80,21 @@ public class PhongController {
         }
     }
 
+    @GetMapping("/vi-pham/tu-muon-tra/{id}")
+    public String taoViPhamTuMuonTra(@PathVariable Long id, Model model) {
+        MuonTra ban = muonTraService.getBanById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy phiếu mượn"));
+        long soNgayTre = muonTraService.tinhSoNgayTre(ban);
+        if (soNgayTre <= 0) {
+            return "redirect:/muonTra/" + id + "?error=khong-phai-qua-han";
+        }
+
+        ViPhamPhong viPhamPhong = phongService.taoViPhamTuMuonTra(ban);
+        loadDashboard(model, new DatPhong(), new LichTrongPhong(), viPhamPhong, null);
+        model.addAttribute("prefillMessage", "Đã chuyển dữ liệu từ phiếu mượn quá hạn sang form vi phạm.");
+        return "phong/index";
+    }
+
     @GetMapping("/bien-lai/{id}")
     public String bienLai(@PathVariable Long id, Model model) {
         ViPhamPhong viPhamPhong = phongService.getViPhamById(id)
@@ -82,6 +102,12 @@ public class PhongController {
         model.addAttribute("viPham", viPhamPhong);
         model.addAttribute("canManagePenalty", canManagePenalty());
         return "phong/bien-lai";
+    }
+
+    @PostMapping("/vi-pham/xoa/{id}")
+    public String xoaViPham(@PathVariable Long id) {
+        phongService.xoaViPham(id);
+        return "redirect:/phong?success=xoa-vi-pham";
     }
 
     private void loadDashboard(Model model, DatPhong datPhong, LichTrongPhong lichTrongPhong, ViPhamPhong viPhamPhong, String error) {
