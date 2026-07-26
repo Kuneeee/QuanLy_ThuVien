@@ -21,4 +21,4 @@
  + B1: ./j21.sh
  + B2: cd quanLy && mvn clean compile
  + B3: mvn spring-boot:run (để chạy local database)
-       ./run-neon.sh (để cạy cloud database, khuyến khích)
+       ./run-neon.sh (để chạy cloud database, khuyến khích)

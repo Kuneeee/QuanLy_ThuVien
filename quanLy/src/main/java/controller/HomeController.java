@@ -30,17 +30,7 @@ public class HomeController {
     }
 
     @GetMapping("/dashboard")
-    public String dashboard(Model model) {
-        // Dashboard với thông tin tổng quan
-        model.addAttribute("tongTaiLieu", taiLieuService.getAllHangHoa().size());
-        model.addAttribute("tongGiaTriTaiLieu", taiLieuService.tinhTongGiaTriKho());
-        
-        model.addAttribute("tongPhieuMuonTra", muonTraService.getAllBan().size());
-        
-        model.addAttribute("tongPhieuNhapTaiLieu", nhapTaiLieuService.getAllNhap().size());
-        
-        model.addAttribute("tongDocGia", docGiaService.getAllCustomers().size());
-        
-        return "dashboard";
+    public String dashboard() {
+        return "redirect:/heThong";
     }
 }

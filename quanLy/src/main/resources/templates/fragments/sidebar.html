@@ -12,14 +12,14 @@
 
     <nav class="sidebar-nav">
         <div class="sidebar-group-title">CHỨC NĂNG ỨNG DỤNG</div>
-        <a sec:authorize="hasRole('ADMIN')" class="sidebar-link" th:classappend="${activeMenu == 'docGia'} ? ' active' : ''" href="/docGia"><i class="fas fa-user-shield"></i><span>Tài khoản và phân quyền</span></a>
+        <a sec:authorize="hasAnyRole('ADMIN','SYSTEM_ADMIN')" class="sidebar-link" th:classappend="${activeMenu == 'docGia'} ? ' active' : ''" href="/docGia"><i class="fas fa-user-shield"></i><span>Tài khoản và phân quyền</span></a>
         <a class="sidebar-link" th:classappend="${activeMenu == 'doi-mat-khau'} ? ' active' : ''" href="/doi-mat-khau"><i class="fas fa-key"></i><span>Đổi mật khẩu</span></a>
-        <a sec:authorize="hasRole('ADMIN')" class="sidebar-link" th:classappend="${activeMenu == 'taiLieu'} ? ' active' : ''" href="/taiLieu"><i class="fas fa-book-open"></i><span>Tài liệu thư viện</span></a>
+        <a sec:authorize="hasAnyRole('ADMIN','SYSTEM_ADMIN')" class="sidebar-link" th:classappend="${activeMenu == 'taiLieu'} ? ' active' : ''" href="/taiLieu"><i class="fas fa-book-open"></i><span>Tài liệu thư viện</span></a>
         <a class="sidebar-link" th:classappend="${activeMenu == 'taiLieu-search'} ? ' active' : ''" href="/taiLieu/search"><i class="fas fa-magnifying-glass"></i><span>Tìm kiếm và tra cứu</span></a>
         <a class="sidebar-link" th:classappend="${activeMenu == 'muonTra'} ? ' active' : ''" href="/muonTra"><i class="fas fa-right-left"></i><span>Mượn, trả và đặt trước</span></a>
         <a class="sidebar-link" th:classappend="${activeMenu == 'phong'} ? ' active' : ''" href="/phong"><i class="fas fa-triangle-exclamation"></i><span>Xử phạt và phòng</span></a>
         <a class="sidebar-link" th:classappend="${activeMenu == 'thongBao'} ? ' active' : ''" href="/thongBao"><i class="fas fa-bell"></i><span>Thông báo, thống kê, báo cáo</span></a>
-        <a sec:authorize="hasRole('ADMIN')" class="sidebar-link" th:classappend="${activeMenu == 'dashboard'} ? ' active' : ''" href="/dashboard"><i class="fas fa-screwdriver-wrench"></i><span>Quản trị hệ thống</span></a>
+        <a sec:authorize="hasRole('SYSTEM_ADMIN')" class="sidebar-link" th:classappend="${activeMenu == 'heThong'} ? ' active' : ''" href="/heThong"><i class="fas fa-screwdriver-wrench"></i><span>Quản trị hệ thống</span></a>
     </nav>
 
     <div class="sidebar-collapse">

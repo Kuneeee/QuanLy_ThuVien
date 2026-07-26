@@ -20,7 +20,8 @@ public class DemoAccountBootstrap implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
-        upsertUser("admin", "admin123", "ADMIN");
+        upsertUser("admin", "admin123", "SYSTEM_ADMIN");
+        upsertUser("thuthu", "thuthu123", "ADMIN");
         upsertUser("giaovien", "giaovien123", "TEACHER");
         upsertUser("sinhvien", "sinhvien123", "STUDENT");
     }

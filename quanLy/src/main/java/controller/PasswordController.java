@@ -20,6 +20,8 @@ import java.util.Optional;
 @Controller
 public class PasswordController {
 
+    private static final String ROLE_SYSTEM_ADMIN = "ROLE_SYSTEM_ADMIN";
+
     @Autowired
     private InMemoryUserDetailsManager userDetailsManager;
 
@@ -47,10 +49,10 @@ public class PasswordController {
             return "auth/change-password";
         }
 
-        boolean isAdmin = authentication.getAuthorities().stream()
-                .anyMatch(authority -> "ROLE_ADMIN".equals(authority.getAuthority()));
-        if (isAdmin) {
-            model.addAttribute("error", "Tài khoản admin dùng mật khẩu mẫu cố định. Hãy liên hệ quản trị hệ thống nếu cần thay đổi.");
+        boolean isSystemAdmin = authentication.getAuthorities().stream()
+            .anyMatch(authority -> ROLE_SYSTEM_ADMIN.equals(authority.getAuthority()));
+        if (isSystemAdmin) {
+            model.addAttribute("error", "Tài khoản quản trị hệ thống dùng mật khẩu mẫu cố định. Hãy liên hệ quản trị hệ thống nếu cần thay đổi.");
             return "auth/change-password";
         }
 

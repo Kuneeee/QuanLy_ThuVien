@@ -24,7 +24,8 @@ public class LibraryUserDetailsService implements UserDetailsService {
     private DocGiaRepository docGiaRepository;
 
     private static final Map<String, DemoAccount> DEMO_ACCOUNTS = Map.of(
-            "admin", new DemoAccount("admin", "admin123", "ADMIN"),
+            "admin", new DemoAccount("admin", "admin123", "SYSTEM_ADMIN"),
+            "thuthu", new DemoAccount("thuthu", "thuthu123", "ADMIN"),
             "giaovien", new DemoAccount("giaovien", "giaovien123", "TEACHER"),
             "sinhvien", new DemoAccount("sinhvien", "sinhvien123", "STUDENT")
     );

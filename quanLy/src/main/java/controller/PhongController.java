@@ -23,6 +23,9 @@ import java.util.List;
 @RequestMapping("/phong")
 public class PhongController {
 
+    private static final String ROLE_ADMIN = "ROLE_ADMIN";
+    private static final String ROLE_SYSTEM_ADMIN = "ROLE_SYSTEM_ADMIN";
+
     @Autowired
     private PhongService phongService;
 
@@ -131,7 +134,7 @@ public class PhongController {
             return false;
         }
         return authentication.getAuthorities().stream()
-                .anyMatch(authority -> "ROLE_ADMIN".equals(authority.getAuthority()));
+                .anyMatch(authority -> ROLE_ADMIN.equals(authority.getAuthority()) || ROLE_SYSTEM_ADMIN.equals(authority.getAuthority()));
     }
 
     private boolean canManagePenalty() {

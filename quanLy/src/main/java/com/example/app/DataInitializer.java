@@ -1,21 +1,7 @@
 package com.example.app;
 
-import entity.DocGia;
-import entity.DatPhong;
-import entity.MuonTra;
-import entity.NhapTaiLieu;
-import entity.LichTrongPhong;
-import entity.ThongBaoMau;
-import entity.ViPhamPhong;
-import entity.TaiLieu;
-import repository.DatPhongRepository;
-import repository.TaiLieuRepository;
-import repository.DocGiaRepository;
-import repository.MuonTraRepository;
-import repository.NhapTaiLieuRepository;
-import repository.LichTrongPhongRepository;
-import repository.ThongBaoMauRepository;
-import repository.ViPhamPhongRepository;
+import entity.*;
+import repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -55,6 +41,18 @@ public class DataInitializer implements CommandLineRunner {
     private ThongBaoMauRepository thongBaoMauRepository;
 
     @Autowired
+    private CauHinhHeThongRepository cauHinhHeThongRepository;
+
+    @Autowired
+    private NhatKyHoatDongRepository nhatKyHoatDongRepository;
+
+    @Autowired
+    private PhienDangNhapRepository phienDangNhapRepository;
+
+    @Autowired
+    private SaoLuuDuLieuRepository saoLuuDuLieuRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Override
@@ -67,6 +65,8 @@ public class DataInitializer implements CommandLineRunner {
         seedMuonTra();
         seedPhong();
         seedThongBao();
+        seedCauHinhHeThong();
+        seedNhatKyHoatDong();
 
         System.out.println("=== DATA INITIALIZER COMPLETE ===");
         System.out.println("TaiLieu count: " + taiLieuRepository.count());
@@ -362,5 +362,36 @@ public class DataInitializer implements CommandLineRunner {
         suKien.setNgayCapNhat(LocalDateTime.now().minusDays(1));
 
         thongBaoMauRepository.saveAll(List.of(baoCao, thuVien, hanTra, suKien));
+    }
+
+    private void seedCauHinhHeThong() {
+        if (cauHinhHeThongRepository.count() > 0) {
+            return;
+        }
+
+        List<CauHinhHeThong> configs = List.of(
+            new CauHinhHeThong("GMAIL_HOST", "smtp.gmail.com", "Máy chủ SMTP", "GMAIL"),
+            new CauHinhHeThong("GMAIL_PORT", "587", "Cổng SMTP", "GMAIL"),
+            new CauHinhHeThong("GMAIL_USER", "", "Địa chỉ email Gmail", "GMAIL"),
+            new CauHinhHeThong("GMAIL_PASS", "", "Mật khẩu ứng dụng Gmail", "GMAIL"),
+            new CauHinhHeThong("GMAIL_FROM", "", "Tên người gửi", "GMAIL"),
+            new CauHinhHeThong("AUTO_BACKUP_ENABLED", "false", "Bật sao lưu tự động", "KHAC"),
+            new CauHinhHeThong("AUTO_BACKUP_INTERVAL", "24", "Chu kỳ sao lưu (giờ)", "KHAC"),
+            new CauHinhHeThong("SESSION_TIMEOUT", "480", "Thời gian hết phiên (phút)", "KHAC"),
+            new CauHinhHeThong("MIN_PASSWORD_LENGTH", "6", "Độ dài mật khẩu tối thiểu", "KHAC")
+        );
+        cauHinhHeThongRepository.saveAll(configs);
+    }
+
+    private void seedNhatKyHoatDong() {
+        if (nhatKyHoatDongRepository.count() > 0) {
+            return;
+        }
+
+        NhatKyHoatDong log1 = new NhatKyHoatDong("LOGIN", "Đăng nhập hệ thống",
+                "admin", "127.0.0.1", "Đăng nhập từ trình duyệt", "THANH_CONG");
+        NhatKyHoatDong log2 = new NhatKyHoatDong("CAU_HINH", "Cập nhật cấu hình GMAIL_HOST",
+                "admin", "127.0.0.1", "smtp.gmail.com", "THANH_CONG");
+        nhatKyHoatDongRepository.saveAll(List.of(log1, log2));
     }
 }

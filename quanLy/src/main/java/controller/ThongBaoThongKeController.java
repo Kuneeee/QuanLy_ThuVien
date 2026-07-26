@@ -25,6 +25,9 @@ import java.util.List;
 @RequestMapping("/thongBao")
 public class ThongBaoThongKeController {
 
+    private static final String ROLE_ADMIN = "ROLE_ADMIN";
+    private static final String ROLE_SYSTEM_ADMIN = "ROLE_SYSTEM_ADMIN";
+
     @Autowired
     private ThongBaoThongKeService thongBaoThongKeService;
 
@@ -115,7 +118,7 @@ public class ThongBaoThongKeController {
         if (authentication == null || authentication.getAuthorities() == null) {
             return false;
         }
-        return authentication.getAuthorities().stream().anyMatch(authority -> "ROLE_ADMIN".equals(authority.getAuthority()));
+        return authentication.getAuthorities().stream().anyMatch(authority -> ROLE_ADMIN.equals(authority.getAuthority()) || ROLE_SYSTEM_ADMIN.equals(authority.getAuthority()));
     }
 
     private boolean isLoai(ThongBaoMau mau, String keyword) {

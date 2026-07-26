@@ -26,6 +26,9 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/muonTra")
 public class MuonTraController {
+
+    private static final String ROLE_ADMIN = "ROLE_ADMIN";
+    private static final String ROLE_SYSTEM_ADMIN = "ROLE_SYSTEM_ADMIN";
     
     @Autowired
     private MuonTraService muonTraService;
@@ -189,7 +192,7 @@ public class MuonTraController {
             return false;
         }
         return authentication.getAuthorities().stream()
-                .anyMatch(authority -> "ROLE_ADMIN".equals(authority.getAuthority()));
+                .anyMatch(authority -> ROLE_ADMIN.equals(authority.getAuthority()) || ROLE_SYSTEM_ADMIN.equals(authority.getAuthority()));
     }
     
     // Tạo mới phiếu bán

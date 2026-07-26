@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nhật Ký Hoạt Động</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="/css/library-ui.css" rel="stylesheet">
+</head>
+<body>
+<div class="admin-shell">
+    <aside th:replace="~{fragments/sidebar :: librarySidebar('heThong')}"></aside>
+
+    <main class="admin-main">
+        <header class="catalog-topbar">
+            <div>
+                <h1 class="catalog-page-title mb-1">Nhật Ký Hoạt Động</h1>
+                <p class="catalog-page-subtitle mb-0">Lịch sử đăng nhập và lịch sử thay đổi trong hệ thống.</p>
+            </div>
+            <div class="catalog-actions">
+                <a href="/heThong" class="btn btn-outline-secondary"><i class="fas fa-arrow-left me-2"></i>Quay lại</a>
+            </div>
+        </header>
+
+        <section class="catalog-table-shell">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <form method="get" action="/heThong/nhat-ky" class="d-flex gap-2 align-items-center">
+                    <label class="form-label mb-0 fw-semibold">Lọc:</label>
+                    <select class="form-select" name="loai" style="width: auto;" onchange="this.form.submit()">
+                        <option value="">Tất cả</option>
+                        <option value="LOGIN" th:selected="${selectedLoai == 'LOGIN'}">Đăng nhập</option>
+                        <option value="BAO_MAT" th:selected="${selectedLoai == 'BAO_MAT'}">Bảo mật</option>
+                        <option value="SAO_LUU" th:selected="${selectedLoai == 'SAO_LUU'}">Sao lưu</option>
+                        <option value="CAU_HINH" th:selected="${selectedLoai == 'CAU_HINH'}">Cấu hình</option>
+                    </select>
+                </form>
+                <span class="text-muted small"><i class="fas fa-list me-1"></i><span th:text="${#lists.size(nhatKyList)}">0</span> bản ghi</span>
+            </div>
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead>
+                    <tr>
+                        <th>Thời gian</th>
+                        <th>Loại</th>
+                        <th>Hành động</th>
+                        <th>Người thực hiện</th>
+                        <th>IP</th>
+                        <th>Chi tiết</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="log : ${nhatKyList}">
+                        <td class="text-nowrap" th:text="${log.thoiGian != null ? #temporals.format(log.thoiGian, 'dd/MM/yyyy HH:mm:ss') : '-'}">01/01/2026 08:00:00</td>
+                        <td>
+                            <span th:if="${log.loai == 'LOGIN'}" class="badge bg-info">Đăng nhập</span>
+                            <span th:if="${log.loai == 'BAO_MAT'}" class="badge bg-danger">Bảo mật</span>
+                            <span th:if="${log.loai == 'SAO_LUU'}" class="badge bg-warning text-dark">Sao lưu</span>
+                            <span th:if="${log.loai == 'CAU_HINH'}" class="badge bg-success">Cấu hình</span>
+                            <span th:if="${log.loai != 'LOGIN' and log.loai != 'BAO_MAT' and log.loai != 'SAO_LUU' and log.loai != 'CAU_HINH'}" class="badge bg-secondary" th:text="${log.loai}">Khác</span>
+                        </td>
+                        <td th:text="${log.hanhDong}">Đăng nhập</td>
+                        <td th:text="${log.nguoiThucHien}">admin</td>
+                        <td th:text="${log.diaChiIp}">127.0.0.1</td>
+                        <td class="text-break" th:text="${log.chiTiet != null ? log.chiTiet : '-'}">-</td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(nhatKyList)}">
+                        <td colspan="6"><div class="catalog-empty-state"><div class="fw-bold mb-1">Chưa có nhật ký hoạt động</div><div class="small">Các hành động trong hệ thống sẽ được ghi lại tại đây.</div></div></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
